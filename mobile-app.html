@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Mobile App Development Quiz</title>
+        <title>CIT 317: Mobile App Development Quiz</title>
         <style>
         body {
             font-family: sans-serif;
@@ -125,7 +125,7 @@
              cursor: not-allowed;
         }
 
-        /* Feedback Area (for MC only) */
+        /* Feedback & Explanation Area */
         #feedback-area {
             margin-top: 15px;
             padding: 15px;
@@ -143,6 +143,23 @@
             color: #721c24;
             border: 1px solid #f5c6cb;
         }
+        #explanation-area {
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #f0f0f0; /* Light gray background */
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            line-height: 1.5;
+            text-align: left; /* Ensure text is left-aligned */
+             /* Keep formatting like newlines from the explanation string */
+             white-space: pre-wrap;
+             word-wrap: break-word;
+        }
+         #explanation-area h4 { /* Style for explanation heading */
+            margin-top: 0;
+            color: #413a9a;
+            margin-bottom: 10px;
+         }
 
         /* Score Area */
         #score-area {
@@ -171,7 +188,7 @@
          }
 
         /* Hide elements initially */
-        #next-btn, #feedback-area, #results-area, #restart-btn, #critical-thinking-answer, #critical-thinking-prompt {
+        #next-btn, #feedback-area, #explanation-area, #results-area, #restart-btn, #critical-thinking-answer, #critical-thinking-prompt {
             display: none;
         }
     </style>
@@ -198,6 +215,7 @@
 
                 <button id="submit-btn">Submit Answer</button>
                 <div id="feedback-area"></div> <!-- Feedback only for MC -->
+                <div id="explanation-area"></div> <!-- Explanation Area -->
                 <button id="next-btn">Next Question</button>
             </div>
 
@@ -224,8 +242,9 @@
                     "Native apps are built for specific OS (iOS/Android) using platform SDKs, offering optimal performance, while Hybrid apps use web tech inside a native wrapper, allowing cross-platform code.",
                     "Hybrid apps can access all device features, while Native apps have limited access."
                 ],
-                correctIndex: 2
-            },
+                correctIndex: 2,
+                explanation: "Native apps are developed specifically for one operating system (like iOS or Android) using its native programming language (Swift/Objective-C for iOS, Kotlin/Java for Android) and SDKs. This gives them the best performance and access to all device features.\nHybrid apps are essentially web apps (HTML, CSS, JS) packaged inside a native 'container'. Frameworks like React Native or Flutter allow developers to write code (often JavaScript or Dart) that gets translated or bridged to native components. They allow for code sharing across platforms but might have performance limitations or dependencies on plugins for accessing certain native features."
+            }, // Comma after object
             {
                 type: 'mc',
                 question: "Which set of technologies is most commonly associated with Web Development, as opposed to native App Development?",
@@ -235,13 +254,15 @@
                     "Flutter, React Native, Ionic",
                     "C#, Objective-C"
                 ],
-                correctIndex: 1
-            },
+                correctIndex: 1,
+                explanation: "HTML (structure), CSS (styling), and JavaScript (interactivity) are the core technologies of the web. Frameworks like Angular and React are widely used for building complex web applications.\nJava/Kotlin (Android) and Swift (iOS) are primary native app languages. Flutter, React Native, and Ionic are cross-platform *mobile* app frameworks (though React can also be used for web). C# is used for native development (Xamarin/MAUI) and Objective-C was the predecessor to Swift for iOS."
+            }, // Comma after object
              // Chapter 1 - Critical (1)
             {
                 type: 'critical',
-                question: "Scenario: A small news organization wants to deliver breaking news alerts and read articles offline. Limited budget, web-skilled team, needs iOS & Android presence quickly. Critically evaluate Native, Hybrid, and Web apps. Justify your recommendation and explain the key trade-offs (performance, cost, features, time-to-market)."
-            },
+                question: "Scenario: A small news organization wants to deliver breaking news alerts and read articles offline. Limited budget, web-skilled team, needs iOS & Android presence quickly. Critically evaluate Native, Hybrid, and Web apps. Justify your recommendation and explain the key trade-offs (performance, cost, features, time-to-market).",
+                explanation: `#### Answer Guidance:\n*   **Web App:** Lowest cost/fastest start with existing web skills. However, implementing robust offline storage and native push notifications is difficult or limited compared to other approaches. Poor user experience for app-like features.\n*   **Native Apps:** Offers the best performance, smoothest UI, and easiest access to all native features (push, offline storage). BUT, it requires separate codebases (iOS/Android), specialized skills (Swift/Kotlin), doubling development time and cost – unsuitable for the limited budget and quick launch requirement.\n*   **Hybrid Apps:** The most likely recommendation. Frameworks like React Native or Flutter allow leveraging existing web-like concepts (component-based UI) or even direct web skills (Ionic). They enable significant code sharing, reducing time and cost. Access to native features like push notifications and offline storage (SQLite, local file storage) is available through plugins/modules. While performance might be slightly less than pure native, it's generally sufficient for content-based apps like a news reader.\n*   **Trade-offs of Hybrid:** Slightly lower peak performance than native, reliance on framework updates and plugin availability/quality, potentially larger app size.\n*   **Justification:** Hybrid balances the constraints: uses related skills, faster time-to-market than native, lower cost than native, provides necessary feature access (push, offline), and reaches both platforms.`
+            }, // Comma after object
             // Chapter 2 - MCQs (2)
             {
                  type: 'mc',
@@ -252,8 +273,9 @@
                     "Development budget and team's existing skills",
                     "The specific color theme options available in the default SDK"
                 ],
-                correctIndex: 3
-            },
+                correctIndex: 3,
+                explanation: "While UI/UX is important, the specific default color themes are easily customizable and not a fundamental platform constraint. Target audience (iOS users often spend more, Android has larger global share), required features (e.g., Apple's ARKit might be superior for certain AR), and budget/skills (iOS often requires Macs, specific languages) are much more critical strategic factors influencing the platform choice."
+            }, // Comma after object
              {
                  type: 'mc',
                 question: "What is the first stage in the typical Mobile Application Development Lifecycle?",
@@ -263,13 +285,15 @@
                     "Deployment",
                     "Research/Planning"
                 ],
-                correctIndex: 3
-            },
+                correctIndex: 3,
+                explanation: "The lifecycle typically begins with Research/Planning. This involves defining the app's purpose, target audience, core features, platform choice, monetization strategy, competitive analysis, and initial technical feasibility assessment. Skipping this stage leads to poorly defined projects, scope creep, budget overruns, and potential failure."
+            }, // Comma after object
             // Chapter 2 - Critical (1)
              {
                 type: 'critical',
-                question: "Argue why skipping or significantly rushing the 'Research/Planning' stage often leads to greater costs and delays later in the lifecycle. Provide specific examples of problems that might arise during Development or Testing due to inadequate planning."
-            },
+                question: "Argue why skipping or significantly rushing the 'Research/Planning' stage often leads to greater costs and delays later in the lifecycle. Provide specific examples of problems that might arise during Development or Testing due to inadequate planning.",
+                explanation: `#### Answer Guidance:\nSkipping/rushing planning introduces significant risks that manifest later:\n*   **Increased Rework:** Without clear requirements and design, developers might build the wrong features or implement them incorrectly, requiring costly changes during or after development (e.g., changing core navigation after user testing reveals confusion).\n*   **Technical Debt:** Poor initial architectural decisions made in haste can lead to code that's hard to maintain, test, and extend, slowing down future development.\n*   **Budget/Timeline Overruns:** Discovering technical challenges (e.g., an API is unreliable, a required feature needs a complex custom solution) or major usability issues late in the process leads to unexpected delays and costs.\n*   **Wrong Target/Platform:** Realizing during testing that the chosen platform doesn't adequately support a key feature, or that the target audience prefers a different platform, can necessitate a major pivot or project failure.\n*   **Examples:**\n    *   **Development:** Constant back-and-forth on feature details because they weren't defined; discovering a chosen third-party library has critical bugs or limitations.\n    *   **Testing:** Finding fundamental usability flaws requiring significant UI redesign; realizing performance is unacceptable on target devices due to poor architectural choices.`
+            }, // Comma after object
             // Chapter 3 - MCQs (3)
             {
                 type: 'mc',
@@ -280,8 +304,9 @@
                     "Managing the application's data, logic, and rules (interacting with database/APIs).",
                     "Controlling the flow between the View and the data source directly."
                 ],
-                correctIndex: 2
-            },
+                correctIndex: 2,
+                explanation: "The Model is responsible for the application's data and business logic. It encapsulates the data (e.g., user profile, product list) and the rules for manipulating it (e.g., validation, calculations). It interacts with data sources like databases or APIs and provides data to the Controller when requested. The View displays the data, and the Controller acts as the intermediary, handling user input and updating the Model or View."
+            }, // Comma after object
             {
                  type: 'mc',
                  question: "Which data storage option in Android is best suited for storing small amounts of simple key-value data, like user preferences?",
@@ -291,8 +316,9 @@
                     "Shared Preferences",
                     "Content Providers"
                  ],
-                 correctIndex: 2
-            },
+                 correctIndex: 2,
+                 explanation: "Shared Preferences are designed specifically for storing small collections of key-value pairs, typically primitive data types (booleans, strings, ints, etc.). This makes them ideal for user settings or flags.\nSQLite is for structured, relational data (like tables in a database). File storage is for raw files (images, documents). Content Providers are for sharing data between applications."
+            }, // Comma after object
             {
                 type: 'mc',
                 question: "What does API stand for in the context of software development?",
@@ -302,13 +328,15 @@
                     "Automated Processing Instruction",
                     "Application Process Integration"
                 ],
-                correctIndex: 0
-            },
+                correctIndex: 0,
+                explanation: "API stands for Application Programming Interface. It defines a set of rules, protocols, and tools for building software applications. An API specifies how software components should interact, allowing different systems or parts of a system to communicate with each other without needing to know the internal details of how they are implemented."
+            }, // Comma after object
              // Chapter 3 - Critical 1 (Storage Security) (1)
              {
                 type: 'critical',
-                question: "Compare using SharedPreferences/UserDefaults versus EncryptedSharedPreferences/Keychain for storing user authentication tokens locally. Why is using the standard (non-encrypted) approach a significant security risk, especially on rooted/jailbroken devices?"
-             },
+                question: "Compare using SharedPreferences/UserDefaults versus EncryptedSharedPreferences/Keychain for storing user authentication tokens locally. Why is using the standard (non-encrypted) approach a significant security risk, especially on rooted/jailbroken devices?",
+                explanation: `#### Answer Guidance:\n*   **Standard (SharedPreferences/UserDefaults):** Stores data as simple key-value pairs in an XML (Android) or plist (iOS) file within the app's private directory. This data is stored in **plaintext** or easily reversible encoding.\n*   **Secure (EncryptedSharedPreferences/Keychain):**\n    *   \`EncryptedSharedPreferences\` (Android): A library that automatically encrypts keys and values before storing them in standard SharedPreferences, using cryptographic best practices.\n    *   \`Keychain\` (iOS): A system-level secure database specifically designed for storing small pieces of sensitive data like passwords, keys, and tokens. Data is strongly encrypted and can be protected by device passcode/biometrics. Access controls can limit when and how the data can be retrieved.\n*   **Security Risk:** Authentication tokens grant access to a user's account. Storing them in plaintext via standard SharedPreferences/UserDefaults makes them vulnerable. On a rooted (Android) or jailbroken (iOS) device, the security sandboxing is compromised. Malicious apps or users with root privileges can potentially access the app's private directory and read these plaintext files, stealing the token and hijacking the user's session.\n*   **Conclusion:** Secure storage mechanisms are essential for sensitive data like auth tokens because they add a strong layer of encryption, making data significantly harder to steal even if the device's basic file system security is bypassed.`
+             }, // Comma after object
              // Chapter 3 - MCQs (2)
             {
                 type: 'mc',
@@ -319,8 +347,9 @@
                     "Implementing robust user authentication.",
                     "Regularly updating third-party libraries."
                  ],
-                 correctIndex: 1
-             },
+                 correctIndex: 1,
+                 explanation: "Insecure Data Storage refers specifically to risks associated with how data is saved *locally* on the device. Storing sensitive data (passwords, API keys, personal info, tokens) without adequate encryption (i.e., in plaintext or weak encoding) in places like SharedPreferences, SQLite databases, or plain files is a major vulnerability. If the device is compromised (lost, stolen, rooted/jailbroken), this data can be easily extracted."
+            }, // Comma after object
               {
                 type: 'mc',
                 question: "What is the purpose of 'Code Signing' a mobile application?",
@@ -330,13 +359,15 @@
                     "To automatically translate the app into different languages.",
                     "To enable push notifications."
                  ],
-                 correctIndex: 1
-             },
+                 correctIndex: 1,
+                 explanation: "Code signing uses a digital certificate (linked to the developer) to create a cryptographic signature for the application package. This signature serves two main purposes: \n1. **Authenticity:** It verifies that the app genuinely comes from the developer who holds the corresponding private key. \n2. **Integrity:** It ensures that the app's code has not been altered or corrupted since it was signed by the developer. Operating systems like Android and iOS check this signature during installation and updates."
+            }, // Comma after object
             // Chapter 3 - Critical 2 (MVC) (1)
              {
                 type: 'critical',
-                question: "How does strictly adhering to MVC help manage complexity and facilitate collaboration when building a large-scale mobile application with multiple developers? Contrast this with mixing UI logic, data handling, and user input in the same code files."
-             },
+                question: "How does strictly adhering to MVC help manage complexity and facilitate collaboration when building a large-scale mobile application with multiple developers? Contrast this with mixing UI logic, data handling, and user input in the same code files.",
+                explanation: `#### Answer Guidance:\n*   **MVC Benefits for Large Apps/Teams:**\n    *   **Separation of Concerns:** Dividing the app into Model (data/logic), View (UI), and Controller (mediator) makes the codebase easier to understand and navigate.\n    *   **Modularity & Collaboration:** Developers can specialize and work on different layers concurrently with less conflict. A UI developer can work on the View while a backend/logic developer works on the Model, interacting primarily through the Controller interface.\n    *   **Testability:** Each component can be tested more independently. Models can often be unit-tested without UI. Views can be tested visually or with UI testing frameworks. Controllers can be tested for their logic.\n    *   **Maintainability:** Changes in one layer have less impact on others. Fixing a UI bug is less likely to break data logic. It's easier to find where specific functionality resides.\n*   **Contrast with Mixed Logic (e.g., Massive ViewController/Activity):**\n    *   **High Coupling:** Code becomes tightly interwoven ("spaghetti code"). Changing a UI element might require significant changes in data fetching or business logic within the same file.\n    *   **Difficult Collaboration:** Multiple developers editing the same large file increases merge conflicts and the risk of breaking each other's work.\n    *   **Poor Testability:** Unit testing becomes very difficult as logic is tied to UI components and lifecycle events.\n    *   **Hard to Maintain/Understand:** The codebase becomes brittle, complex, and difficult for new team members to grasp or for anyone to debug effectively.`
+             }, // Comma after object
              // Chapter 4 - MCQs (3)
              {
                  type: 'mc',
@@ -347,8 +378,9 @@
                     "Android Studio",
                     "Eclipse with ADT Plugin"
                 ],
-                correctIndex: 2
-            },
+                correctIndex: 2,
+                explanation: "Android Studio is the official IDE specifically designed for Android app development. It's built on IntelliJ IDEA and provides tools for coding, debugging, testing, and packaging Android apps. Xcode is Apple's IDE for iOS/macOS. Visual Studio Code is a general-purpose code editor. Eclipse with the ADT plugin was the predecessor to Android Studio but is no longer officially supported."
+            }, // Comma after object
             {
                 type: 'mc',
                 question: "In Android development, what are Layouts primarily used for?",
@@ -358,8 +390,9 @@
                     "Defining the visual structure and arrangement of UI elements on the screen.",
                     "Storing user preferences."
                 ],
-                correctIndex: 2
-            },
+                correctIndex: 2,
+                explanation: "Layouts (like LinearLayout, RelativeLayout, ConstraintLayout, FrameLayout) are containers used in Android to define how UI elements (Views like Buttons, TextViews, ImageViews) are positioned and organized on the screen. They dictate the visual hierarchy and arrangement."
+            }, // Comma after object
              {
                 type: 'mc',
                 question: "Which technology is commonly used for backend services, real-time databases, and push notifications in Android apps, provided by Google?",
@@ -369,13 +402,15 @@
                     "Firebase",
                     "Shared Preferences"
                  ],
-                 correctIndex: 2
-             },
+                 correctIndex: 2,
+                 explanation: "Firebase is Google's mobile and web application development platform. It offers a suite of backend services, including Firestore (NoSQL cloud database), Realtime Database, Cloud Functions (serverless computing), Authentication, Cloud Messaging (for push notifications), Crashlytics, and more. SQLite and Realm are local database solutions. Shared Preferences are for simple key-value storage."
+             }, // Comma after object
             // Chapter 4 - Critical (RecyclerView) (1)
             {
                  type: 'critical',
-                 question: "An Android app displaying a long, scrollable list of network images using LinearLayout inside ScrollView becomes slow and crashes with OutOfMemoryError. Explain why this is inefficient. Recommend a better UI component and explain how it solves these issues."
-             },
+                 question: "An Android app displaying a long, scrollable list of network images using LinearLayout inside ScrollView becomes slow and crashes with OutOfMemoryError. Explain why this is inefficient. Recommend a better UI component and explain how it solves these issues.",
+                 explanation: `#### Answer Guidance:\n*   **Inefficiency Explained:** Using \`LinearLayout\` inside a \`ScrollView\` forces the system to create and keep in memory **all** the Views for **every single item** in the list, even those currently off-screen. For a long list, especially with memory-intensive items like images, this consumes a huge amount of RAM, leading to \`OutOfMemoryError\` crashes. It also makes scrolling inefficient because the system has to measure and draw a potentially massive layout.\n*   **Recommendation:** \`RecyclerView\`.\n*   **How RecyclerView Solves It:**\n    *   **View Recycling:** \`RecyclerView\` only creates enough ViewHolders (containers for item views) to fill the screen plus a small buffer. As items scroll off-screen, their views are not destroyed but put into a pool to be **reused** (recycled) for new items scrolling onto the screen. This drastically reduces memory consumption and the overhead of creating new views.\n    *   **ViewHolder Pattern:** Enforces the use of the ViewHolder pattern, which avoids repeated calls to \`findViewById()\` (an expensive operation) by storing references to the item's subviews within the ViewHolder object.\n    *   **LayoutManager:** Separates the policy of *how* items are laid out (linear, grid, staggered) from the recycling mechanism, providing flexibility.`
+            }, // Comma after object
              // Chapter 5 - MCQs (2)
              {
                  type: 'mc',
@@ -386,8 +421,9 @@
                     "Beta Testing",
                     "User Acceptance Testing (UAT)"
                 ],
-                correctIndex: 1
-            },
+                correctIndex: 1,
+                explanation: "Unit Testing focuses on testing the smallest testable parts of an application, typically individual functions or methods, in isolation from the rest of the system. The goal is to verify that each 'unit' of code works correctly on its own. Dependencies are often mocked or stubbed out.\nIntegration testing checks if different units/modules work together. Beta testing involves real users. UAT confirms the system meets user requirements."
+            }, // Comma after object
             {
                 type: 'mc',
                 question: "What is the primary purpose of 'Crash Reporting Tools' like Firebase Crashlytics?",
@@ -397,13 +433,15 @@
                     "To automatically collect, analyze, and report details about application crashes occurring on users' devices.",
                     "To manage user feedback and feature requests."
                 ],
-                correctIndex: 2
-            },
+                correctIndex: 2,
+                explanation: "Crash Reporting tools (like Firebase Crashlytics, Sentry, Bugsnag) automatically capture detailed information (stack traces, device state, OS version, app version) when an application crashes on an end-user's device. This data is sent to a dashboard, allowing developers to prioritize, diagnose, and fix crashes efficiently, improving app stability."
+            }, // Comma after object
              // Chapter 5 - Critical (Beta Testing) (1)
             {
                 type: 'critical',
-                question: "A mobile game team conducts thorough Unit and Alpha testing. Argue why Beta Testing with real users is still crucial. What specific feedback or issues are more likely uncovered during Beta Testing?"
-            },
+                question: "A mobile game team conducts thorough Unit and Alpha testing. Argue why Beta Testing with real users is still crucial for this game's success. What specific types of feedback or issues are more likely uncovered during Beta Testing?",
+                explanation: `#### Answer Guidance:\nEven with rigorous internal testing, Beta testing is crucial because:\n*   **Real-World Environment:** It exposes the game to a wide variety of real devices, OS versions, network conditions (slow/flaky Wi-Fi, cellular data), and usage patterns that are impossible to fully simulate internally.\n*   **Unbiased User Perspective:** Real users provide fresh eyes and unbiased feedback on gameplay, fun factor, difficulty, controls, and intuitiveness. Internal testers might be too familiar with the game or hesitant to give harsh feedback.\n*   **Discovering Edge Cases:** The sheer number and diversity of beta testers increase the chance of uncovering rare bugs, device-specific issues, or unexpected interactions missed during Alpha testing.\n*   **Feedback More Likely Uncovered in Beta:**\n    *   **Performance Issues:** Lag, battery drain, overheating on specific (often lower-end) devices not in the internal test pool.\n    *   **Usability/Fun Factor:** Confusion about game mechanics, unfair difficulty spikes, boring sections, awkward controls.\n    *   **Network Robustness:** Issues related to poor connectivity, synchronization problems in multiplayer.\n    *   **Device Compatibility:** Crashes or visual glitches specific to certain manufacturers or OS versions.\n    *   **Scalability (if backend involved):** Issues under concurrent user load.`
+            }, // Comma after object
             // Chapter 6 - MCQs (2)
              {
                 type: 'mc',
@@ -414,8 +452,9 @@
                     "Beta Testing",
                     "Regression Testing"
                 ],
-                correctIndex: 2
-            },
+                correctIndex: 2,
+                explanation: "Beta Testing is the phase where a nearly finished version of the application is released to a select group of external users (beta testers) outside the development organization. The goal is to get feedback on usability, performance, and bugs in a real-world setting before the official launch. Alpha testing is typically internal testing by QA or other employees."
+            }, // Comma after object
             {
                  type: 'mc',
                 question: "What is an Android App Bundle (.aab)?",
@@ -425,13 +464,15 @@
                     "A publishing format that includes all compiled code and resources, allowing Google Play to generate optimized APKs for specific devices.",
                     "A file containing only the app's graphic assets."
                 ],
-                correctIndex: 2
-            },
+                correctIndex: 2,
+                explanation: "An Android App Bundle (.aab) is a publishing format uploaded to Google Play. It contains all the app's compiled code and resources for all supported device configurations (different architectures, screen densities, languages). Google Play then uses the App Bundle to generate and serve optimized APKs tailored to each user's specific device, resulting in smaller download sizes for users compared to monolithic APKs."
+            }, // Comma after object
              // Chapter 6 - Critical (Guidelines) (1)
             {
                 type: 'critical',
-                question: "An app update gets rejected for requesting excessive permissions. Explain the importance of app store guidelines regarding user privacy/permissions. What are potential negative consequences for the developer (beyond rejection) if they repeatedly try to circumvent these guidelines?"
-            },
+                question: "An app update gets rejected for requesting excessive permissions. Explain the importance of app store guidelines regarding user privacy/permissions. What are potential negative consequences for the developer (beyond rejection) if they repeatedly try to circumvent these guidelines?",
+                explanation: `#### Answer Guidance:\n*   **Importance of Guidelines:** App store guidelines regarding permissions are crucial for:\n    *   **User Privacy & Trust:** Protecting users from apps that collect unnecessary data or perform actions without justification. This builds trust in the platform ecosystem.\n    *   **Security:** Limiting an app's capabilities reduces the potential damage if the app itself is malicious or compromised.\n    *   **Transparency:** Forcing developers to justify permission requests helps users understand why access is needed.\n*   **Potential Negative Consequences for Developer:**\n    *   **Repeated Rejections/Delays:** Wastes significant time and resources, delaying bug fixes and feature releases.\n    *   **Negative User Perception:** If users notice excessive permission requests (even if approved), it can lead to negative reviews, uninstalls, and damage to the app's reputation.\n    *   **Reduced Discoverability:** Stores might penalize apps with poor user reviews or trust signals.\n    *   **App Suspension:** Persistent or egregious violations can lead to the app being permanently removed from the store.\n    *   **Developer Account Termination:** In severe cases, the developer's entire account could be terminated, preventing them from publishing any apps on that platform.`
+            }, // Comma after object
             // Chapter 7 - MCQs (4)
              {
                  type: 'mc',
@@ -442,8 +483,9 @@
                     "They define rules for security, privacy, performance, content, and business practices that apps must follow to be accepted and remain on the store.",
                     "They only apply to hybrid applications, not native ones."
                  ],
-                 correctIndex: 2
-             },
+                 correctIndex: 2,
+                 explanation: "App Store Guidelines are mandatory rules set by platform owners (Apple, Google) that developers must adhere to for their apps to be listed and remain available. They cover a wide range of aspects including safety, security, privacy, performance, design, content appropriateness, and business models. Failure to comply can lead to rejection during review or removal from the store."
+            }, // Comma after object
             {
                  type: 'mc',
                 question: "What is the primary IDE used for developing native iOS applications?",
@@ -453,8 +495,9 @@
                     "Visual Studio",
                     "NetBeans"
                 ],
-                correctIndex: 1
-            },
+                correctIndex: 1,
+                explanation: "Xcode is Apple's official Integrated Development Environment (IDE) for developing software for macOS, iOS, iPadOS, watchOS, and tvOS. It includes a source code editor, graphical interface builder, debugging tools, simulators, and compilers for Swift and Objective-C. Android Studio is for Android, Visual Studio is primarily for Windows/.NET (though it has mobile extensions), and NetBeans is a general Java IDE."
+            }, // Comma after object
             {
                  type: 'mc',
                 question: "Which programming language was introduced by Apple as a modern, safe, and powerful language for iOS, macOS, watchOS, and tvOS development?",
@@ -464,8 +507,9 @@
                     "C#",
                     "Swift"
                 ],
-                correctIndex: 3
-            },
+                correctIndex: 3,
+                explanation: "Swift was introduced by Apple in 2014 as a successor to Objective-C. It was designed to be safer, faster, and more modern, incorporating features like type inference, optionals, robust error handling, and value types to help developers write more reliable code for Apple platforms. Kotlin is primarily used for Android, Java historically for Android, and C# for various platforms including mobile via Xamarin/MAUI."
+            }, // Comma after object
             {
                 type: 'mc',
                 question: "What tool within Xcode allows developers to test their iOS apps on simulated iPhone or iPad environments without needing a physical device?",
@@ -475,15 +519,17 @@
                     "iOS Simulator",
                     "Swift Package Manager"
                 ],
-                correctIndex: 2
-            },
+                correctIndex: 2,
+                explanation: "The iOS Simulator, included with Xcode, provides a way to run and test iOS, iPadOS, watchOS, and tvOS apps on a Mac. It simulates various device types, screen sizes, and OS versions, allowing developers to quickly test functionality and UI without needing every physical device. Instruments is for performance profiling, Interface Builder for UI design, and Swift Package Manager for managing dependencies."
+            }, // Comma after object
             // Chapter 7 - Critical (Swift Safety) (1)
              {
                 type: 'critical',
-                question: "Swift was designed with 'safety' as a key goal. Describe two specific Swift language features that contribute to safer code compared to Objective-C, and explain how they help prevent common runtime crashes or bugs."
-             }
+                question: "Swift was designed with 'safety' as a key goal. Describe two specific Swift language features that contribute to safer code compared to Objective-C, and explain *how* these features help prevent common runtime crashes or bugs.",
+                explanation: `#### Answer Guidance:\nChoose two examples like these:\n1.  **Optionals (\`?\`, \`!\`):**\n    *   **Feature:** Swift explicitly requires developers to handle cases where a variable might not have a value (\`nil\`). Variables must be declared as Optional (e.g., \`String?\`) if they can be \`nil\`.\n    *   **How it Helps:** This prevents unexpected crashes caused by attempting to access methods or properties on a \`nil\` reference (equivalent to null pointer exceptions). Developers are forced to safely unwrap optionals (using \`if let\`, \`guard let\`, optional chaining \`?.\`, or the nil-coalescing operator \`??\`) before using their value, making \`nil\`-related errors compile-time checks rather than runtime crashes.\n\n2.  **Strong Type System & Type Inference:**\n    *   **Feature:** Swift is strongly typed, meaning every variable has a specific type, and the compiler checks for type mismatches. It also has powerful type inference, reducing the need for explicit type declarations while maintaining safety.\n    *   **How it Helps:** Catches many errors at compile time that might only appear at runtime in more dynamically typed languages (like passing a number where a string is expected). This prevents type-related crashes and unexpected behavior, making the code more predictable and robust.\n\n*(Other valid examples include: Immutability by default (\`let\`), Value types (structs/enums) reducing side effects, Clear error handling (\`do-try-catch\`), Guard statements for early exits)*`
+             } // NO comma after the last object in the array
              // --- End Combination (Total 20 MCQs, 8 Critical) ---
-        ];
+        ]; // Semicolon terminates the array assignment statement
 
         // DOM Elements
         const questionTextElement = document.getElementById('question-text');
@@ -492,6 +538,7 @@
         const criticalPrompt = document.getElementById('critical-thinking-prompt');
         const submitButton = document.getElementById('submit-btn');
         const feedbackArea = document.getElementById('feedback-area');
+        const explanationArea = document.getElementById('explanation-area'); // Get explanation area
         const nextButton = document.getElementById('next-btn');
         const scoreElement = document.getElementById('score');
         const totalMcQuestionsElement = document.getElementById('total-mc-questions');
@@ -513,6 +560,8 @@
             feedbackArea.style.display = 'none';
             feedbackArea.textContent = '';
             feedbackArea.className = 'feedback-area';
+            explanationArea.style.display = 'none'; // Hide explanation on new question load
+            explanationArea.innerHTML = ''; // Clear explanation
             optionsContainer.innerHTML = '';
             optionsContainer.style.display = 'none'; // Hide by default
             criticalAnswerArea.style.display = 'none'; // Hide by default
@@ -522,6 +571,7 @@
             nextButton.style.display = 'none'; // Hide by default
             submitButton.disabled = true;
             selectedOptionElement = null;
+            delete nextButton.dataset.explanationShown; // Reset explanation flag
 
             if (currentQuestionIndex < quizData.length) {
                 const currentQuestion = quizData[currentQuestionIndex];
@@ -570,23 +620,24 @@
                      criticalAnswerArea.style.display = 'block';
                      criticalPrompt.style.display = 'block';
                      nextButton.style.display = 'block'; // Show Next directly for critical
-                     nextButton.textContent = 'Proceed to Next Question'; // Specific text
+                     nextButton.textContent = 'Proceed / Show Guidance'; // Initial text for critical
                 }
 
                 // Update score display
                 totalMcQuestionsElement.textContent = totalMcQuestions;
                 scoreElement.textContent = score;
 
-                 // Change Next button text if this is the last question overall
+                 // Set initial 'Next' button text if it's the last question
                  if (currentQuestionIndex === quizData.length - 1) {
-                    nextButton.textContent = 'Show Results';
+                     // Will be updated later if MC, but set default for critical
+                     if(quizData[currentQuestionIndex].type === 'critical') {
+                        nextButton.textContent = 'Show Guidance / Results';
+                     }
+                     // For MC, it will be updated in submitAnswer
                  }
 
-
             } else {
-                // This case should ideally not be reached if the last question logic works,
-                // but as a fallback, go to results.
-                showResults();
+                 showResults();
             }
         }
 
@@ -597,11 +648,10 @@
             submitButton.disabled = true;
             submitButton.style.display = 'none';
             nextButton.style.display = 'block'; // Show next/results button
-            // Keep the text set in loadQuestion ('Next Question' or 'Show Results')
 
-
+            const currentQuestion = quizData[currentQuestionIndex];
             const selectedAnswerIndex = parseInt(selectedRadio.value);
-            const correctAnswerIndex = quizData[currentQuestionIndex].correctIndex;
+            const correctAnswerIndex = currentQuestion.correctIndex;
 
             const allOptionDivs = optionsContainer.querySelectorAll('.option');
             allOptionDivs.forEach((div, index) => {
@@ -625,25 +675,62 @@
                 feedbackArea.className = 'feedback-area correct-feedback';
             } else {
                 // Use textContent for security/consistency
-                feedbackArea.textContent = `Incorrect. The correct answer was: ${quizData[currentQuestionIndex].options[correctAnswerIndex]}`;
+                feedbackArea.textContent = `Incorrect. The correct answer was: ${currentQuestion.options[correctAnswerIndex]}`;
                 feedbackArea.className = 'feedback-area incorrect-feedback';
             }
 
             feedbackArea.style.display = 'block';
             scoreElement.textContent = score; // Update score display after checking
 
+            // Display Explanation for MC Question
+            if (currentQuestion.explanation) {
+                // Use innerHTML here if explanations contain basic formatting like <h4> or \n converted to <br>
+                explanationArea.innerHTML = `<h4>Explanation:</h4>${currentQuestion.explanation.replace(/\n/g, '<br>')}`; // Replace newlines with <br> for HTML display
+                explanationArea.style.display = 'block';
+            }
 
+             // Set button text for the next step
+             if (currentQuestionIndex === quizData.length - 1) {
+                 nextButton.textContent = 'Show Results';
+             } else {
+                  nextButton.textContent = 'Next Question';
+             }
         }
 
         function nextQuestion() {
-            // Check if we should show results *before* incrementing
-             if (currentQuestionIndex >= quizData.length - 1) {
+            const currentQuestion = quizData[currentQuestionIndex]; // Get current question *before* potentially incrementing index
+
+             // Logic for Critical Thinking questions: Show explanation on first click, proceed on second
+            if (currentQuestion.type === 'critical') {
+                 // Check if explanation is already shown using the data attribute flag
+                 if (!nextButton.dataset.explanationShown) {
+                    // First click: Show explanation
+                    if (currentQuestion.explanation) {
+                        explanationArea.innerHTML = `<h4>Guidance / Key Points:</h4>${currentQuestion.explanation.replace(/\n/g, '<br>')}`;
+                        explanationArea.style.display = 'block';
+                    }
+                    nextButton.dataset.explanationShown = 'true'; // Mark explanation as shown
+                    // Update button text to indicate the next action
+                    if (currentQuestionIndex === quizData.length - 1) {
+                        nextButton.textContent = 'Show Results';
+                    } else {
+                        nextButton.textContent = 'Next Question';
+                    }
+                    return; // Wait for the second click to proceed
+                 }
+                 // Second click (explanation was shown): Fall through to increment/show results logic
+                  delete nextButton.dataset.explanationShown; // Reset flag for next time
+            }
+
+            // Proceed to next question or show results
+            if (currentQuestionIndex >= quizData.length - 1) {
                  showResults();
-             } else {
+            } else {
                  currentQuestionIndex++;
                  loadQuestion(); // Load next question
-             }
+            }
         }
+
 
          function showResults() {
             questionArea.style.display = 'none';
@@ -664,14 +751,14 @@
             restartButton.style.display = 'none';
             questionArea.style.display = 'block';
             scoreArea.style.display = 'block';
-            // nextButton.textContent will be set correctly by loadQuestion
+            delete nextButton.dataset.explanationShown; // Reset flag if restarting
             loadQuestion();
         }
 
 
         // Event Listeners
         submitButton.addEventListener('click', submitAnswer); // Only enabled/shown for MC
-        nextButton.addEventListener('click', nextQuestion); // Shown after MC submit OR directly for critical OR to show results
+        nextButton.addEventListener('click', nextQuestion); // Handles MC next, Critical proceed/explanation show, and Results show
         restartButton.addEventListener('click', restartQuiz);
 
         // Initial Load
