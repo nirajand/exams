@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OOAD UML Quiz</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        #quiz-container {
+            max-width: 800px;
+            margin: auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+        h1, h2 {
+            text-align: center;
+            color: #0056b3;
+        }
+        #question-area {
+            margin-bottom: 20px;
+            padding: 20px;
+            background-color: #e9ecef;
+            border-radius: 5px;
+            border-left: 5px solid #0056b3;
+        }
+        #question-text {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        #unit-info {
+            font-size: 0.9em;
+            color: #555;
+            margin-bottom: 10px;
+            text-align: right;
+        }
+        .options label {
+            display: block;
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .options label:hover {
+            background-color: #e2e6ea;
+        }
+        .options input[type="radio"] {
+            margin-right: 10px;
+        }
+        #feedback-area {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 4px;
+        }
+        #feedback-area.correct {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        #feedback-area.incorrect {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        #feedback-area.guidance {
+             background-color: #fff3cd;
+             border: 1px solid #ffeeba;
+             color: #856404;
+        }
+        #explanation {
+            margin-top: 15px;
+            font-size: 0.95em;
+            border-top: 1px solid #ccc;
+            padding-top: 15px;
+        }
+        button {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            font-size: 1.1em;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background-color 0.2s;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        #score-area {
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 20px;
+            padding: 10px;
+            background-color: #e9ecef;
+            border-radius: 5px;
+        }
+        #results-area {
+            text-align: center;
+            padding: 20px;
+            background-color: #d1ecf1;
+            border: 1px solid #bee5eb;
+            border-radius: 5px;
+            color: #0c5460;
+        }
+        #results-area h2 {
+            color: #0c5460;
+        }
+        .option-feedback {
+            padding-left: 5px;
+            font-weight: bold;
+        }
+        .correct-answer {
+             background-color: #c3e6cb !important; /* Light green background for correct */
+             border-color: #155724 !important;
+        }
+        .incorrect-user-choice {
+             background-color: #f5c6cb !important; /* Light red background for incorrect user choice */
+             border-color: #721c24 !important;
+             text-decoration: line-through;
+        }
+        textarea {
+            width: 95%;
+            height: 100px;
+            padding: 10px;
+            margin-top: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-family: sans-serif;
+        }
+        .critical-thinking-info {
+            font-size: 0.9em;
+            color: #6c757d;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div id="quiz-container">
+        <h1>OOAD UML Quiz</h1>
+
+        <div id="score-area" style="display: none;">MC Score: 0 / 0</div>
+
+        <div id="question-area" style="display: none;">
+            <div id="unit-info">Unit X: Topic Name</div>
+            <div id="question-text"></div>
+            <div class="options" id="mcq-options">
+                <!-- MCQ options will be populated here -->
+            </div>
+            <div id="ct-input-area" style="display: none;">
+                <textarea id="ct-textarea" placeholder="Use this space for self-reflection (not graded)."></textarea>
+                 <div class="critical-thinking-info">This is a critical thinking question. Reflect on your answer before proceeding.</div>
+            </div>
+            <button id="submit-button" disabled>Submit Answer</button>
+            <button id="proceed-button" style="display: none;">Proceed / Show Guidance</button> <!-- Initially hidden -->
+            <div id="feedback-area" style="display: none;">
+                <span id="feedback-text"></span>
+                <div id="explanation"></div>
+            </div>
+            <button id="next-button" style="display: none;">Next Question</button>
+        </div>
+
+        <div id="results-area" style="display: none;">
+            <h2>Quiz Completed!</h2>
+            <p id="final-score"></p>
+            <p id="score-percentage"></p>
+            <p style="font-size: 0.9em; color: #6c757d;">Note: Only Multiple Choice Questions were scored.</p>
+            <button id="restart-button">Restart Quiz</button>
+        </div>
+    </div>
+
+    <script>
+        const quizData = [
+            // Lesson 1: Object Oriented Fundamentals (10 hrs) ~ 9 questions (7 MCQ, 2 CT)
+             {
+                type: 'MCQ',
+                question: "What is the primary goal of Object-Oriented Analysis and Design (OOAD)?",
+                options: [
+                    "To write code as quickly as possible.",
+                    "To extend the principles of OOP to the entire software development process for creating modular and scalable systems.",
+                    "To focus solely on database design.",
+                    "To replace the need for testing."
+                ],
+                correctIndex: 1,
+                explanation: "OOAD extends OOP principles to the whole development lifecycle, focusing on analyzing systems, identifying objects and interactions, and designing modular, scalable solutions (Page 11). It's not just about speed, databases, or skipping testing.",
+                unit: 1,
+                chapterName: 'Object Oriented Fundamentals'
+            },
+            {
+                type: 'MCQ',
+                question: "Which Object-Oriented feature involves hiding internal details and exposing only necessary information?",
+                options: [
+                    "Inheritance",
+                    "Polymorphism",
+                    "Abstraction",
+                    "Encapsulation"
+                ],
+                correctIndex: 3,
+                explanation: "Encapsulation is the feature where objects bundle data (attributes) and methods, hiding internal details and exposing only necessary interfaces (Page 9). Abstraction focuses on essential characteristics, Inheritance promotes reuse, and Polymorphism allows objects to be treated as instances of a common base class.",
+                unit: 1,
+                chapterName: 'Object Oriented Fundamentals'
+            },
+            {
+                type: 'MCQ',
+                question: "In Use Case modeling, what does the <<extend>> relationship signify?",
+                options: [
+                    "A mandatory inclusion of another use case's functionality.",
+                    "Optional behavior that adds functionality to a base use case under specific conditions.",
+                    "A generalization relationship between two actors.",
+                    "The main flow of events in a use case."
+                ],
+                correctIndex: 1,
+                explanation: "The <<extend>> relationship indicates optional behavior that can extend a base use case only under specific circumstances or conditions (Page 123). <<include>> represents mandatory inclusion (Page 121), and generalization relates actors or use cases in a hierarchy.",
+                unit: 1,
+                chapterName: 'Object Oriented Fundamentals'
+            },
+             {
+                type: 'MCQ',
+                question: "What characterizes iterative development, as often used in OOAD?",
+                options: [
+                    "A single, long development phase followed by testing.",
+                    "A linear process where each phase must be completed before the next begins.",
+                    "Breaking down development into smaller, repeated cycles of planning, analysis, design, implementation, and testing.",
+                    "Focusing only on requirements gathering."
+                ],
+                correctIndex: 2,
+                explanation: "Iterative development breaks the process into repeated cycles (iterations), each including planning, analysis, design, implementation, and testing. This allows for flexibility, feedback, and incremental progress (Page 12, 42). It contrasts with linear models like Waterfall.",
+                unit: 1,
+                chapterName: 'Object Oriented Fundamentals'
+            },
+            {
+                type: 'MCQ',
+                question: "According to the provided text, what are the three key aspects of an object?",
+                options: [
+                    "Class, Method, Variable",
+                    "Input, Processing, Output",
+                    "Identity, Behavior, State",
+                    "Analysis, Design, Implementation"
+                ],
+                correctIndex: 2,
+                explanation: "Page 4 explicitly states that each object has identity (distinguishing ID), behavior (methods it performs), and state (characteristic properties and their values).",
+                unit: 1,
+                chapterName: 'Object Oriented Fundamentals'
+            },
+            {
+                type: 'MCQ',
+                question: "What is the main difference between Object Oriented Systems and Structured Systems regarding decomposition?",
+                options: [
+                    "Structured systems decompose into functions, while OO systems decompose into data objects.",
+                    "Structured systems decompose into classes, while OO systems decompose into modules.",
+                    "Both decompose into functions, but OO systems use inheritance.",
+                    "Structured systems are iterative, while OO systems are linear."
+                ],
+                correctIndex: 0,
+                explanation: "Page 15 highlights key differences. Structured systems are decomposed into functions, modeling functions and data separately. Object Oriented systems are decomposed into data objects, modeling functions and data together within objects.",
+                unit: 1,
+                chapterName: 'Object Oriented Fundamentals'
+            },
+             {
+                type: 'MCQ',
+                question: "What is the primary focus of Object-Oriented Analysis (OOA)?",
+                options: [
+                    "Defining how software objects collaborate to fulfill requirements.",
+                    "Implementing the design using a specific programming language.",
+                    "Finding and describing the concepts and objects in the problem domain.",
+                    "Optimizing the hardware configuration."
+                ],
+                correctIndex: 2,
+                explanation: "OOA emphasizes investigating the problem and requirements, identifying objects/concepts in the real world (problem domain) without getting into implementation details. It focuses on the 'what' (Page 16, 17, 21, 23). OOD focuses on the 'how' (solution domain).",
+                unit: 1,
+                chapterName: 'Object Oriented Fundamentals'
+            },
+            {
+                type: 'Critical Thinking',
+                question: "Explain the concept of 'Decomposition' in the context of Object-Oriented development as described on page 3. Why is this 'divide and conquer' approach beneficial?",
+                explanation: "Guidance: Refer to page 3. Your explanation should define decomposition as partitioning the problem domain into smaller, manageable parts. Discuss the benefits mentioned, such as reduced complexity, focusing on specific functionality, enabling individual understanding/design/testing of modules, and facilitating parallel development and collaboration.",
+                unit: 1,
+                chapterName: 'Object Oriented Fundamentals'
+            },
+             {
+                type: 'Critical Thinking',
+                question: "Using the example 'transport be an object' from page 4 (Identity: Bus, Behavior: move(), stop(), State: running, stopped), explain how Abstraction (page 9) might be applied. What essential characteristics would you focus on, and what details might you ignore?",
+                explanation: "Guidance: Abstraction simplifies complexity by modeling essential characteristics (Page 9). For the 'transport' object (Bus), essential characteristics might be its ability to transport passengers, its current location, and its capacity. Details like engine type, tire pressure, or specific driver might be ignored depending on the system's context. The abstraction focuses on 'what' the transport does (move, stop, carry passengers) rather than the intricate 'how'.",
+                unit: 1,
+                chapterName: 'Object Oriented Fundamentals'
+            },
+            // Lesson 2: Object Oriented Analysis (10 hrs) ~ 9 questions (7 MCQ, 2 CT)
+            {
+                type: 'MCQ',
+                question: "What is the primary purpose of OOAD Modeling according to the slides?",
+                options: [
+                    "To generate code automatically.",
+                    "To visualize, specify, construct, and document artifacts of a software-intensive system.",
+                    "To replace the need for requirements gathering.",
+                    "To manage project timelines."
+                ],
+                correctIndex: 1,
+                explanation: "OOAD Modeling helps to visualize, specify, construct, and document system artifacts, manage complexity, understand requirements, and derive implementation (Page 29, 30, 31).",
+                unit: 2,
+                chapterName: 'Object Oriented Analysis'
+            },
+            {
+                type: 'MCQ',
+                question: "Which type of OOAD model focuses on representing concepts within the problem domain, depicting static structures with attributes but typically no operations?",
+                options: [
+                    "Behavioral Model",
+                    "Implementation Model",
+                    "Conceptual Model",
+                    "Specification Model"
+                ],
+                correctIndex: 2,
+                explanation: "The Conceptual Model represents concepts in the problem domain, focuses on static structure (concepts, attributes, associations), and aids in understanding requirements, explicitly without operations (Page 32). Behavioral models show dynamics, Implementation models show technology specifics, and Specification models define interfaces.",
+                unit: 2,
+                chapterName: 'Object Oriented Analysis'
+            },
+             {
+                type: 'MCQ',
+                question: "What is the main function of a System Sequence Diagram (SSD)?",
+                options: [
+                    "To show the detailed internal logic of methods.",
+                    "To represent the static structure of classes.",
+                    "To illustrate the sequence of system events generated by external actors interacting with the system (viewed as a black box).",
+                    "To define database schemas."
+                ],
+                correctIndex: 2,
+                explanation: "An SSD shows, for a specific use case scenario, the events external actors generate against the system (treated as a black box), illustrating the order of these interactions (Page 160, 161, 163). It focuses on 'what' the system does in response to external events, not the internal 'how'.",
+                unit: 2,
+                chapterName: 'Object Oriented Analysis'
+            },
+            {
+                type: 'MCQ',
+                question: "In the context of System Behavior represented as a 'black box', what is the primary focus?",
+                options: [
+                    "The internal algorithms and data structures.",
+                    "The specific programming language used.",
+                    "The inputs, outputs, and the relationship between them, without detailing internal mechanisms.",
+                    "The development team members."
+                ],
+                correctIndex: 2,
+                explanation: "Treating a system as a black box means focusing on its inputs and outputs and how they relate, deliberately ignoring or hiding the internal workings or mechanisms (Page 151, 153).",
+                unit: 2,
+                chapterName: 'Object Oriented Analysis'
+            },
+            {
+                type: 'MCQ',
+                question: "Which artifact is considered the 'most important artifact to create during object-oriented analysis' according to page 196?",
+                options: [
+                    "System Sequence Diagram (SSD)",
+                    "Use Case Diagram",
+                    "Domain Model (Conceptual Model)",
+                    "Implementation Model"
+                ],
+                correctIndex: 2,
+                explanation: "Page 196 explicitly states, 'A domain model illustrates meaningful conceptual classes in a problem domain; it is the most important artifact to create during object-oriented analysis.'",
+                unit: 2,
+                chapterName: 'Object Oriented Analysis'
+            },
+             {
+                type: 'MCQ',
+                question: "According to page 198, what should a Domain Model *not* typically show?",
+                options: [
+                    "Conceptual classes",
+                    "Associations between concepts",
+                    "Attributes of concepts",
+                    "Software artifacts like windows or databases, or methods/operations"
+                ],
+                correctIndex: 3,
+                explanation: "Page 198 clearly states that a domain model shows conceptual classes, associations, and attributes, but must *not* show software artifacts (like windows, databases) or responsibilities/methods/operations.",
+                unit: 2,
+                chapterName: 'Object Oriented Analysis'
+            },
+            {
+                type: 'MCQ',
+                question: "What is the goal of Noun Phrase Analysis in identifying conceptual classes?",
+                options: [
+                    "To identify verbs representing actions.",
+                    "To identify nouns and noun phrases in textual descriptions as candidates for conceptual classes or attributes.",
+                    "To define the system's boundary.",
+                    "To determine the programming language."
+                ],
+                correctIndex: 1,
+                explanation: "Noun Phrase Analysis is a technique to find domain classes by identifying nouns and noun phrases in textual descriptions (like use cases) and considering them as candidate conceptual classes or attributes (Page 209, 210).",
+                unit: 2,
+                chapterName: 'Object Oriented Analysis'
+            },
+             {
+                type: 'Critical Thinking',
+                question: "Compare and contrast the Conceptual Model and the Implementation Model in OOAD modeling (referencing pages 32-33 and 40-41). What are their different purposes and levels of detail?",
+                explanation: "Guidance: Explain that the Conceptual Model focuses on the problem domain, representing real-world concepts, their attributes, and associations, often without operations or implementation details (Page 32). In contrast, the Implementation Model focuses on the solution domain, describing software components with technology-specific details, acting as a bridge to coding (Page 40). Discuss the difference in abstraction levels and their roles in the development process.",
+                unit: 2,
+                chapterName: 'Object Oriented Analysis'
+            },
+            {
+                type: 'Critical Thinking',
+                question: "Describe the steps involved in creating a System Sequence Diagram (SSD) from a Use Case description, as outlined on pages 163-164 and 182.",
+                explanation: "Guidance: Summarize the process: 1. Represent the System as a black box (often a rectangle on the right). 2. Identify external actors interacting directly and draw their figures/lifelines (usually on the left). 3. Based on the use case text (scenario), identify system events generated by actors. 4. Draw messages (arrows) from actor lifelines to the system lifeline for each event, ordered chronologically down the page. Optionally include use case text.",
+                unit: 2,
+                chapterName: 'Object Oriented Analysis'
+            },
+             // Lesson 3: Object Oriented Design (13 hrs) ~ 12 questions (9 MCQ, 3 CT)
+             {
+                type: 'MCQ',
+                question: "What is the primary purpose of GRASP (General Responsibility Assignment Software Principles)?",
+                options: [
+                    "To define database schemas.",
+                    "To provide guidelines for assigning responsibilities to classes and objects in OOD.",
+                    "To manage project schedules.",
+                    "To automate testing procedures."
+                ],
+                correctIndex: 1,
+                explanation: "GRASP provides guidelines or principles for assigning responsibilities to classes/objects during object-oriented design, helping decide 'who does what' (Page 339).",
+                unit: 3,
+                chapterName: 'Object Oriented Design'
+            },
+            {
+                type: 'MCQ',
+                question: "Which GRASP pattern addresses the question: 'Who should be responsible for creating a new instance of some class?'",
+                options: [
+                    "Information Expert",
+                    "Creator",
+                    "Low Coupling",
+                    "High Cohesion"
+                ],
+                correctIndex: 1,
+                explanation: "The Creator pattern specifically deals with assigning the responsibility for creating object instances, often to a class that contains, aggregates, records, or closely uses the object to be created (Page 342, 343).",
+                unit: 3,
+                chapterName: 'Object Oriented Design'
+            },
+            {
+                type: 'MCQ',
+                question: "The GRASP principle of 'Low Coupling' suggests that:",
+                options: [
+                    "Classes should have many responsibilities.",
+                    "Classes should be highly dependent on each other.",
+                    "Responsibilities should be assigned to minimize dependency between classes.",
+                    "All classes should inherit from a single base class."
+                ],
+                correctIndex: 2,
+                explanation: "Low Coupling aims to minimize the dependencies between classes. Responsibilities should be assigned in a way that reduces how strongly objects are connected, making the system more maintainable and reusable (Page 347).",
+                unit: 3,
+                chapterName: 'Object Oriented Design'
+            },
+            {
+                type: 'MCQ',
+                question: "High Cohesion, another GRASP principle, means that:",
+                options: [
+                    "A class has many unrelated responsibilities.",
+                    "A class has responsibilities that are strongly related and focused.",
+                    "Classes are loosely connected.",
+                    "A class delegates most of its work to other classes."
+                ],
+                correctIndex: 1,
+                explanation: "High Cohesion means the responsibilities of a single class are strongly related and focused on a specific purpose. Low cohesion implies a class does too many unrelated things (Page 350).",
+                unit: 3,
+                chapterName: 'Object Oriented Design'
+            },
+             {
+                type: 'MCQ',
+                question: "In OOD, what does 'Visibility' refer to?",
+                options: [
+                    "How well the user interface is designed.",
+                    "The ability of one object to 'see' or have a reference to another object.",
+                    "The number of lines of code in a method.",
+                    "The clarity of comments in the code."
+                ],
+                correctIndex: 1,
+                explanation: "Visibility is defined as the ability of one object to see or have a reference/pointer to another object, which is necessary for sending messages (Page 376, 377).",
+                unit: 3,
+                chapterName: 'Object Oriented Design'
+            },
+            {
+                type: 'MCQ',
+                question: "Which type of visibility is described as 'relatively permanent' and exists when object B is an attribute of object A?",
+                options: [
+                    "Parameter Visibility",
+                    "Local Visibility",
+                    "Global Visibility",
+                    "Attribute Visibility"
+                ],
+                correctIndex: 3,
+                explanation: "Attribute visibility is described as relatively permanent because it persists as long as the containing object (A) and the attribute object (B) exist (Page 380).",
+                unit: 3,
+                chapterName: 'Object Oriented Design'
+            },
+             {
+                type: 'MCQ',
+                question: "What is the purpose of a Design Class Diagram (DCD) in contrast to a Domain Model?",
+                options: [
+                    "DCDs show user interactions, while Domain Models show database tables.",
+                    "DCDs define software classes and their details (methods, types), while Domain Models represent real-world concepts.",
+                    "Domain Models include implementation details, while DCDs focus on requirements.",
+                    "There is no difference; the terms are interchangeable."
+                ],
+                correctIndex: 1,
+                explanation: "Domain Models illustrate real-world concepts from the problem domain, usually without operations. Design Class Diagrams (DCDs) define software classes, including methods, type information, visibility, and other implementation-oriented details for the solution domain (Page 395).",
+                unit: 3,
+                chapterName: 'Object Oriented Design'
+            },
+             {
+                type: 'MCQ',
+                question: "What is the key difference between Sequence Diagrams and Collaboration/Communication Diagrams?",
+                options: [
+                    "Sequence diagrams show static structure, Collaboration diagrams show behavior.",
+                    "Sequence diagrams emphasize time ordering using vertical layout, while Collaboration diagrams emphasize relationships and use sequence numbers for ordering.",
+                    "Collaboration diagrams are used in analysis, Sequence diagrams are used in testing.",
+                    "Sequence diagrams use rectangles, Collaboration diagrams use ovals."
+                ],
+                correctIndex: 1,
+                explanation: "Sequence diagrams primarily highlight the temporal aspect (time ordering) through their vertical layout. Collaboration (Communication) diagrams show relationships more explicitly and represent the time ordering using sequence numbers prefixed to messages (Page 275, 298).",
+                unit: 3,
+                chapterName: 'Object Oriented Design'
+            },
+             {
+                 type: 'MCQ',
+                 question: "What is the role of the 'Controller' GRASP pattern?",
+                 options: [
+                     "To ensure classes have only one responsibility.",
+                     "To create new object instances.",
+                     "To handle system operation messages, acting as the first point of contact beyond the UI layer.",
+                     "To define variations in behavior using polymorphism."
+                 ],
+                 correctIndex: 2,
+                 explanation: "The Controller pattern assigns the responsibility for receiving or handling system operation messages (events from external actors/UI) to a dedicated object, coordinating the response (Page 354).",
+                 unit: 3,
+                 chapterName: 'Object Oriented Design'
+             },
+            {
+                type: 'Critical Thinking',
+                question: "Explain the GRASP 'Information Expert' principle. Using the 'Video Store' example (page 346), why is the `VideoStore` class considered the Information Expert for the responsibility of 'getting all videos'?",
+                explanation: "Guidance: Define Information Expert: assign responsibility to the class that has the information needed to fulfill it (Page 345). In the example, `VideoStore` presumably holds the collection or references to all `Video` objects within it. Therefore, it has the necessary information (the list/collection of videos) to fulfill the responsibility of providing that list. Assigning this responsibility to `VideoStore` keeps the information and the operations on it together.",
+                unit: 3,
+                chapterName: 'Object Oriented Design'
+            },
+            {
+                type: 'Critical Thinking',
+                question: "Describe the four common ways visibility can be achieved between objects (Attribute, Parameter, Local, Global) and give a brief example or scenario for when each might be appropriate (referencing pages 379-386).",
+                explanation: "Guidance: Define each type: Attribute (object B is a member variable of A - permanent connection, e.g., ProductCatalog in Register), Parameter (B passed to a method of A - temporary during method execution, e.g., ProductDescription passed to makeLineItem), Local (B created/obtained within a method of A - temporary during method scope, e.g., getting a value from a method call), Global (B accessible widely - least common, maybe via Singleton). Discuss the relative permanence and typical use cases.",
+                unit: 3,
+                chapterName: 'Object Oriented Design'
+            },
+             {
+                type: 'Critical Thinking',
+                question: "Contrast the goals of Low Coupling and High Cohesion in OOD. Why is achieving both generally desirable for software design? (Referencing pages 347-353)",
+                explanation: "Guidance: Define Low Coupling as minimizing dependencies *between* classes (Page 347). Define High Cohesion as ensuring responsibilities *within* a single class are strongly related and focused (Page 350). Explain that Low Coupling improves maintainability and reduces the impact of changes, while High Cohesion makes classes easier to understand, manage, and reuse. They often support each other – highly cohesive classes tend to have fewer reasons to be coupled to unrelated classes.",
+                unit: 3,
+                chapterName: 'Object Oriented Design'
+            },
+             // Lesson 4: Implementation (12 hrs) ~ 11 questions (8 MCQ, 3 CT)
+            {
+                type: 'MCQ',
+                question: "What is the relationship between Object-Oriented Design (OOD) and writing code in an OO language like Java or C#?",
+                options: [
+                    "OOD is the same as writing code.",
+                    "Writing code is part of OOD.",
+                    "OOD provides artifacts (like DCDs and Interaction Diagrams) that inform the code writing process, which is the end goal.",
+                    "OOD eliminates the need to write code."
+                ],
+                correctIndex: 2,
+                explanation: "Writing code is the implementation phase, an end goal that follows OOA/D. Design artifacts like DCDs and interaction diagrams provide the necessary information (roadmap) to generate the code (Page 434, 439).",
+                unit: 4,
+                chapterName: 'Implementation'
+            },
+            {
+                type: 'MCQ',
+                question: "How are class definitions primarily created during the 'Mapping Design to Code' phase?",
+                options: [
+                    "By analyzing user stories.",
+                    "By mapping Design Class Diagrams (DCDs) to code.",
+                    "By mapping Use Case diagrams to code.",
+                    "By mapping System Sequence Diagrams (SSDs) to code."
+                ],
+                correctIndex: 1,
+                explanation: "Class definitions (including attributes and method signatures) are created by translating the information presented in Design Class Diagrams (DCDs) into the syntax of the target programming language (Page 439, 440).",
+                unit: 4,
+                chapterName: 'Implementation'
+            },
+            {
+                type: 'MCQ',
+                question: "How are method bodies (implementations) primarily created during the 'Mapping Design to Code' phase?",
+                options: [
+                     "By mapping Design Class Diagrams (DCDs) to code.",
+                    "By mapping Use Case diagrams to code.",
+                    "By mapping Interaction Diagrams (like Collaboration or Sequence Diagrams) to code.",
+                    "By analyzing requirements documents directly."
+                ],
+                correctIndex: 2,
+                explanation: "Method definitions (the logic inside the methods) are created by translating the sequence of messages and interactions shown in Interaction Diagrams (Collaboration/Sequence) into programming statements (Page 439, 443, 444).",
+                unit: 4,
+                chapterName: 'Implementation'
+            },
+             {
+                type: 'MCQ',
+                question: "What is the purpose of using Collection classes (like List, Map, Array) in implementation?",
+                options: [
+                    "To handle user interface events.",
+                    "To manage 'one-to-many' relationships between objects.",
+                    "To define abstract classes.",
+                    "To handle exceptions."
+                ],
+                correctIndex: 1,
+                explanation: "Collection classes are used to implement one-to-many relationships, allowing one object to hold references to multiple other objects (e.g., a Sale holding multiple SaleLineItems). They help manage these groups of objects (Page 453, 455).",
+                unit: 4,
+                chapterName: 'Implementation'
+            },
+             {
+                type: 'MCQ',
+                question: "What is an Exception in the context of programming?",
+                options: [
+                    "A standard feature required in all programs.",
+                    "A condition caused by a compile-time error.",
+                    "A condition caused by a runtime error in the program.",
+                    "A type of design pattern."
+                ],
+                correctIndex: 2,
+                explanation: "An exception is defined as a condition caused by a runtime error in the program, such as invalid user input, file not found, or network issues (Page 456).",
+                unit: 4,
+                chapterName: 'Implementation'
+            },
+            {
+                type: 'MCQ',
+                question: "Which category of exception typically represents problems beyond the control of the user and programmer, like StackOverflowException?",
+                options: [
+                    "Checked Exception",
+                    "Runtime Exception",
+                    "Syntax Error",
+                    "Errors"
+                ],
+                correctIndex: 3,
+                explanation: "Errors represent problems generally beyond the control of the programmer or user, often related to the runtime environment itself, like running out of memory (StackOverflowException) (Page 458). Checked exceptions are typically external issues (like file I/O), and Runtime exceptions are often programming logic errors.",
+                unit: 4,
+                chapterName: 'Implementation'
+            },
+             {
+                type: 'MCQ',
+                question: "What is Reverse Engineering in the context of software development?",
+                options: [
+                    "Building software from high-level models.",
+                    "Synchronizing source code and models.",
+                    "Extracting design information or models from existing code.",
+                    "Writing code backwards."
+                ],
+                correctIndex: 2,
+                explanation: "Reverse engineering is the process of extracting knowledge or design information (like diagrams) from existing source code or executables (Page 438, 468). Forward engineering goes from model to code (Page 467), and Round-trip engineering involves synchronization (Page 469).",
+                unit: 4,
+                chapterName: 'Implementation'
+            },
+            {
+                 type: 'MCQ',
+                 question: "What general principle guides the order of implementation for classes based on coupling?",
+                 options: [
+                     "Implement the most complex classes first.",
+                     "Implement classes in alphabetical order.",
+                     "Implement classes from least-coupled to most-coupled.",
+                     "Implement classes randomly."
+                 ],
+                 correctIndex: 2,
+                 explanation: "Page 470 suggests implementing classes from least-coupled (fewest dependencies) to most-coupled. This allows dependent classes to be built upon already implemented and tested foundations (like Payment or ProductDescription before Sale or Register in the example).",
+                 unit: 4,
+                 chapterName: 'Implementation'
+             },
+            {
+                type: 'Critical Thinking',
+                question: "Explain why the design artifacts (like DCDs and Interaction Diagrams) created during OOD are considered an 'incomplete first step' and why 'creativity and change during implementation' are expected (Referencing pages 433, 435).",
+                explanation: "Guidance: Discuss that design provides a roadmap but doesn't foresee all details. During programming/testing, new problems, complexities, and better solutions are discovered. Coding isn't just mechanical translation; it requires problem-solving. Iterative development embraces this by expecting deviation and feeding implementation learning back into subsequent design refinements.",
+                unit: 4,
+                chapterName: 'Implementation'
+            },
+             {
+                type: 'Critical Thinking',
+                question: "Describe the basic Try-Throw-Catch mechanism for exception handling as explained on page 459. What happens during normal execution versus when an error occurs?",
+                explanation: "Guidance: Explain the process: Code that might cause a runtime error is placed in a 'try' block. If the code runs successfully (normal execution), the 'catch' block(s) are skipped. If a runtime error occurs within the 'try' block, the system 'throws' an exception object, execution of the 'try' block stops immediately, and the system looks for a matching 'catch' block. The 'catch' block (error handler) executes its code to handle the exception, and then execution continues after the catch block.",
+                unit: 4,
+                chapterName: 'Implementation'
+            },
+             {
+                type: 'Critical Thinking',
+                question: "How does mapping a reference attribute (like 'private ProductDescription description;' in SaleLineItem, page 442) differ from mapping a primitive attribute (like 'private int quantity;') when translating a DCD to code?",
+                explanation: "Guidance: Explain that primitive attributes (int, boolean, etc.) map directly to corresponding primitive types in the code. Reference attributes, however, represent an association to another object. In the code, this translates to declaring a variable whose type is the *class* of the referenced object (e.g., `ProductDescription` type for the `description` variable). This variable will hold a reference (like a pointer or memory address) to an instance of the `ProductDescription` class, rather than holding the data directly like a primitive.",
+                unit: 4,
+                chapterName: 'Implementation'
+            }
+        ];
+
+
+        // --- Quiz Logic ---
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let mcqAttempted = 0;
+        let mcqTotal = quizData.filter(q => q.type === 'MCQ').length;
+        let shuffledQuestions = [];
+
+        const quizContainer = document.getElementById('quiz-container');
+        const questionArea = document.getElementById('question-area');
+        const unitInfo = document.getElementById('unit-info');
+        const questionText = document.getElementById('question-text');
+        const mcqOptionsContainer = document.getElementById('mcq-options');
+        const ctInputArea = document.getElementById('ct-input-area');
+        const ctTextArea = document.getElementById('ct-textarea');
+        const submitButton = document.getElementById('submit-button');
+        const proceedButton = document.getElementById('proceed-button');
+        const feedbackArea = document.getElementById('feedback-area');
+        const feedbackText = document.getElementById('feedback-text');
+        const explanationDiv = document.getElementById('explanation');
+        const nextButton = document.getElementById('next-button');
+        const resultsArea = document.getElementById('results-area');
+        const finalScoreP = document.getElementById('final-score');
+        const scorePercentageP = document.getElementById('score-percentage');
+        const restartButton = document.getElementById('restart-button');
+        const scoreArea = document.getElementById('score-area');
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function loadQuestion() {
+            // Reset areas
+            feedbackArea.style.display = 'none';
+            feedbackArea.className = 'feedback-area'; // Reset feedback styling
+            explanationDiv.innerHTML = '';
+            nextButton.style.display = 'none';
+            submitButton.style.display = 'none'; // Hide submit initially
+            proceedButton.style.display = 'none'; // Hide proceed initially
+            mcqOptionsContainer.innerHTML = ''; // Clear previous options
+            ctInputArea.style.display = 'none'; // Hide CT input area
+            ctTextArea.value = ''; // Clear CT textarea
+            questionArea.style.display = 'block';
+            scoreArea.style.display = 'block';
+
+            // Enable inputs for the new question
+            const radios = mcqOptionsContainer.getElementsByTagName('input');
+            for(let radio of radios) {
+                radio.disabled = false;
+            }
+            ctTextArea.disabled = false; // Re-enable textarea
+
+
+            const currentQuestion = shuffledQuestions[currentQuestionIndex];
+            unitInfo.textContent = `Unit ${currentQuestion.unit}: ${currentQuestion.chapterName}`;
+            questionText.textContent = `Q${currentQuestionIndex + 1}: ${currentQuestion.question}`;
+
+            if (currentQuestion.type === 'MCQ') {
+                submitButton.style.display = 'block';
+                submitButton.disabled = true; // Disable until an option is selected
+                proceedButton.style.display = 'none';
+                ctInputArea.style.display = 'none';
+
+                currentQuestion.options.forEach((option, index) => {
+                    const label = document.createElement('label');
+                    label.innerHTML = `
+                        <input type="radio" name="option" value="${index}">
+                        ${option}
+                        <span class="option-feedback"></span>
+                    `;
+                    label.addEventListener('change', () => {
+                         submitButton.disabled = false; // Enable submit button when an option is selected
+                    });
+                    mcqOptionsContainer.appendChild(label);
+                });
+            } else if (currentQuestion.type === 'Critical Thinking') {
+                 submitButton.style.display = 'none';
+                 proceedButton.style.display = 'block';
+                 proceedButton.textContent = 'Proceed / Show Guidance'; // Reset button text
+                 proceedButton.onclick = handleProceedButtonClick; // Ensure correct handler
+                 ctInputArea.style.display = 'block';
+                 mcqOptionsContainer.innerHTML = ''; // No MCQs for CT
+            }
+
+             // Update score display (only counts MCQs encountered so far)
+             let mcqsSoFar = 0;
+             for (let i = 0; i <= currentQuestionIndex; i++) {
+                if (shuffledQuestions[i].type === 'MCQ') {
+                    mcqsSoFar++;
+                }
+             }
+             scoreArea.textContent = `MC Score: ${score} / ${mcqsSoFar > 0 ? mcqsSoFar : 0}`; // Prevent division by zero display issue initially
+        }
+
+        function handleProceedButtonClick() {
+            const currentQuestion = shuffledQuestions[currentQuestionIndex];
+            feedbackArea.style.display = 'block';
+            feedbackArea.className = 'feedback-area guidance'; // Apply guidance styling
+            feedbackText.textContent = "Guidance:";
+            explanationDiv.innerHTML = currentQuestion.explanation;
+            ctTextArea.disabled = true; // Disable textarea after showing guidance
+            proceedButton.textContent = (currentQuestionIndex < shuffledQuestions.length - 1) ? 'Next Question' : 'Show Results';
+
+            // Change the button's function to load the next question/results on the *next* click
+            proceedButton.onclick = loadNextQuestionOrResults;
+        }
+
+        function loadNextQuestionOrResults() {
+             currentQuestionIndex++;
+            if (currentQuestionIndex < shuffledQuestions.length) {
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+
+        submitButton.addEventListener('click', () => {
+            const currentQuestion = shuffledQuestions[currentQuestionIndex];
+            if (currentQuestion.type !== 'MCQ') return; // Should not happen if button logic is correct
+
+            const selectedOptionInput = document.querySelector('input[name="option"]:checked');
+            if (!selectedOptionInput) return; // Should be prevented by disabled state
+
+            const userAnswerIndex = parseInt(selectedOptionInput.value);
+            const labels = mcqOptionsContainer.getElementsByTagName('label');
+            const selectedLabel = labels[userAnswerIndex];
+            const correctLabel = labels[currentQuestion.correctIndex];
+            const feedbackSpan = selectedLabel.querySelector('.option-feedback');
+
+             // Disable all options
+            const radios = mcqOptionsContainer.getElementsByTagName('input');
+            for(let radio of radios) {
+                radio.disabled = true;
+            }
+            submitButton.style.display = 'none'; // Hide submit button after submission
+            nextButton.style.display = 'block'; // Show next button
+
+             mcqAttempted++; // Increment MCQ attempted count
+
+            if (userAnswerIndex === currentQuestion.correctIndex) {
+                score++;
+                feedbackArea.className = 'feedback-area correct';
+                feedbackText.textContent = 'Correct!';
+                feedbackSpan.textContent = '✔';
+                feedbackSpan.style.color = 'green';
+                 selectedLabel.classList.add('correct-answer');
+            } else {
+                feedbackArea.className = 'feedback-area incorrect';
+                feedbackText.textContent = 'Incorrect.';
+                feedbackSpan.textContent = '✘';
+                feedbackSpan.style.color = 'red';
+                selectedLabel.classList.add('incorrect-user-choice'); // Mark user's wrong choice
+                correctLabel.classList.add('correct-answer'); // Highlight the correct answer
+                // Add indicator to correct answer if different from user choice
+                 const correctFeedbackSpan = correctLabel.querySelector('.option-feedback');
+                 correctFeedbackSpan.textContent = '✔ (Correct Answer)';
+                 correctFeedbackSpan.style.color = 'green';
+            }
+
+            explanationDiv.innerHTML = currentQuestion.explanation;
+            feedbackArea.style.display = 'block';
+
+             // Update score display immediately after submitting MCQ
+             scoreArea.textContent = `MC Score: ${score} / ${mcqAttempted}`;
+
+            if (currentQuestionIndex === shuffledQuestions.length - 1) {
+                nextButton.textContent = 'Show Results';
+            } else {
+                nextButton.textContent = 'Next Question';
+            }
+        });
+
+         nextButton.addEventListener('click', () => {
+             loadNextQuestionOrResults();
+         });
+
+
+        function showResults() {
+            questionArea.style.display = 'none';
+            scoreArea.style.display = 'none';
+            resultsArea.style.display = 'block';
+
+            const percentage = mcqTotal > 0 ? ((score / mcqTotal) * 100).toFixed(1) : 0;
+            finalScoreP.textContent = `Your Final MCQ Score: ${score} out of ${mcqTotal}`;
+            scorePercentageP.textContent = `Percentage: ${percentage}%`;
+        }
+
+        restartButton.addEventListener('click', () => {
+            currentQuestionIndex = 0;
+            score = 0;
+            mcqAttempted = 0;
+            resultsArea.style.display = 'none';
+            startQuiz();
+        });
+
+        function startQuiz() {
+            shuffledQuestions = shuffleArray([...quizData]); // Shuffle a copy
+            currentQuestionIndex = 0;
+            score = 0;
+            mcqAttempted = 0;
+            loadQuestion();
+        }
+
+        // Initial setup
+        startQuiz();
+
+    </script>
+</body>
+</html>
