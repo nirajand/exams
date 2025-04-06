@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Economics Quiz (BCT303)</title>
+        <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        #quiz-container {
+            max-width: 800px;
+            margin: auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+
+        #question-area {
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        #unit-topic {
+            font-size: 0.9em;
+            color: #555;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        #question-text {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        #options-area label {
+            display: block;
+            margin-bottom: 10px;
+            padding: 10px;
+            background: #ecf0f1;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        #options-area label:hover {
+            background: #dde4e6;
+        }
+
+        #options-area input[type="radio"] {
+            margin-right: 10px;
+        }
+
+        #options-area textarea {
+            width: 95%;
+            min-height: 100px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1em;
+            margin-top: 10px;
+        }
+
+        #interaction-area button {
+            padding: 10px 20px;
+            font-size: 1em;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #3498db;
+            color: white;
+            transition: background-color 0.3s;
+            margin-right: 10px;
+        }
+
+        #interaction-area button:disabled {
+            background-color: #bdc3c7;
+            cursor: not-allowed;
+        }
+
+        #interaction-area button:hover:not(:disabled) {
+            background-color: #2980b9;
+        }
+
+        #feedback-area {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+        }
+
+        #feedback-text {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        #explanation-text {
+            font-size: 0.95em;
+            color: #444;
+        }
+
+        .correct {
+            background-color: #d4edda !important;
+            border-left: 5px solid #28a745;
+        }
+
+        .incorrect {
+            background-color: #f8d7da !important;
+            border-left: 5px solid #dc3545;
+        }
+
+        .selected {
+             /* Style for selected radio button label */
+             background-color: #dde4e6 !important;
+        }
+
+        #score {
+            text-align: right;
+            font-weight: bold;
+            font-size: 1.1em;
+            color: #e67e22;
+            margin-bottom: 20px;
+        }
+
+        #results-screen {
+            text-align: center;
+            padding: 30px;
+        }
+
+        #results-screen h2 {
+            color: #2c3e50;
+        }
+
+        #final-score, #percentage {
+            font-size: 1.3em;
+            margin: 15px 0;
+        }
+
+        #restart-btn {
+            padding: 12px 25px;
+            font-size: 1.1em;
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 20px;
+        }
+
+        #restart-btn:hover {
+            background-color: #27ae60;
+        }
+         /* Style disabled radio button labels */
+        label.disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+            background: #eee; /* Slightly greyed out */
+        }
+        label.disabled:hover {
+            background: #eee; /* No hover effect when disabled */
+        }
+    </style>
+    </head>
+    <body>
+        <h1>Economics Fundamentals Quiz</h1>
+
+        <div id="quiz-container">
+            <div id="score">MC Score: 0 / 0</div>
+
+            <div id="question-area">
+                <p id="unit-topic"></p>
+                <p id="question-text"></p>
+                <div id="options-area"></div>
+                <p id="ct-note"
+                    style="font-size: 0.9em; color: grey; display: none;">(This
+                    is a critical thinking question for self-reflection. It will
+                    not be scored.)</p>
+            </div>
+
+            <div id="interaction-area">
+                <button id="submit-btn" disabled>Submit Answer</button>
+                <button id="next-btn" style="display: none;">Next
+                    Question</button>
+            </div>
+
+            <div id="feedback-area" style="display: none;">
+                <p id="feedback-text"></p>
+                <p id="explanation-text"></p>
+            </div>
+        </div>
+
+        <div id="results-screen" style="display: none;">
+            <h2>Quiz Results</h2>
+            <p id="final-score"></p>
+            <p id="percentage"></p>
+            <p style="font-size: 0.9em; color: grey;">Note: Only Multiple Choice
+                Questions were scored.</p>
+            <button id="restart-btn">Restart Quiz</button>
+        </div>
+
+        <script>
+        const quizData = [
+            // Unit 1: Introduction (3 MCQs)
+            {
+                type: 'mcq',
+                unit: 1,
+                chapterName: 'Introduction to Economics',
+                question: "According to the provided text, the 'Modern Era' definition of economics (from 1932 onwards) primarily focuses on:",
+                options: [
+                    "The science of wealth creation.",
+                    "The study of material welfare.",
+                    "The administration of scarce means and unlimited wants.",
+                    "Household management and wealth-spending."
+                ],
+                correctIndex: 2,
+                explanation: "The slides explicitly state the Modern Era definition (associated with Lionel Robbins) as 'Economics is the science of administration of scarce means and unlimited wants' (Page 7 & 8). The other options represent the Classical (Wealth), Neo-classical (Welfare), and Aristotle's definitions respectively."
+            },
+            {
+                type: 'mcq',
+                unit: 1,
+                chapterName: 'Introduction to Economics',
+                question: "Which branch of economics studies the behavior of individual economic units like consumers, households, and firms?",
+                options: [
+                    "Macroeconomics",
+                    "Political Economy",
+                    "Microeconomics",
+                    "Normative Economics"
+                ],
+                correctIndex: 2,
+                explanation: "Page 13 defines Microeconomics as the branch dealing 'with the study of economic behavior of an unit of economy' such as individuals or firms. Macroeconomics studies the economy as a whole (Page 14)."
+            },
+            {
+                type: 'mcq',
+                unit: 1,
+                chapterName: 'Introduction to Economics',
+                question: "Which of Mankiw's ten basic principles falls under the category 'How people make decisions'?",
+                options: [
+                    "Trade can make everyone better off.",
+                    "Markets are usually a good way to organize economic activity.",
+                    "Rational people think at the margin.",
+                    "A country's standard of living depends on its ability to produce goods and services."
+                ],
+                correctIndex: 2,
+                explanation: "Page 10 explicitly lists Principles 1-4 under 'How people make decision'. Principle 3 is 'Rational people think at margin'. Options A and B fall under 'How people interact', and Option D falls under 'How the economy works as a whole' (Page 11)."
+            },
+            // Unit 2: Demand Supply and Elasticities (7 MCQs, 1 CT)
+            {
+                type: 'mcq',
+                unit: 2,
+                chapterName: 'Demand Supply and Elasticities',
+                question: "In economics, 'demand' is defined as:",
+                options: [
+                    "A simple desire or wish for a good.",
+                    "The ability to pay for a good, regardless of desire.",
+                    "Effective desire backed by ability and willingness to pay.",
+                    "The total quantity available in the market."
+                ],
+                correctIndex: 2,
+                explanation: "Page 24 and 25 clarify that demand requires not just desire, but also the 'ability to pay' and 'willingness to pay'. Page 26 contrasts this with desire, which can exist without resources."
+            },
+            {
+                type: 'mcq',
+                unit: 2,
+                chapterName: 'Demand Supply and Elasticities',
+                question: "The Law of Demand, according to Prof. Alfred Marshall, states that (other things remaining the same):",
+                options: [
+                    "Demand increases when price increases.",
+                    "Demand increases when price falls, and diminishes when price rises.",
+                    "Supply increases when price falls.",
+                    "Demand is determined solely by consumer income."
+                ],
+                correctIndex: 1,
+                explanation: "Page 44 quotes Marshall's Law of Demand: 'Other things remaining the same, the demand increases with a fall in price and diminishes with a rise in price'. This describes the inverse relationship."
+            },
+            {
+                type: 'mcq',
+                unit: 2,
+                chapterName: 'Demand Supply and Elasticities',
+                question: "A Market Demand Schedule represents:",
+                options: [
+                    "The demand of a single household at various prices.",
+                    "The total supply in the market.",
+                    "The sum total demand of all consumers in the market at various prices.",
+                    "The equilibrium price and quantity."
+                ],
+                correctIndex: 2,
+                explanation: "Page 29 defines Market Demand Schedule as 'the sum total of demand of goods by all the consumers from the market at certain period of time' at different prices."
+            },
+             {
+                type: 'mcq',
+                unit: 2,
+                chapterName: 'Demand Supply and Elasticities',
+                question: "What distinguishes a 'change in quantity demanded' (movement along the curve) from a 'change in demand' (shift of the curve)?",
+                options: [
+                    "A change in quantity demanded is caused by factors other than price, while a change in demand is caused by price.",
+                    "A change in quantity demanded is caused by a change in the good's own price, while a change in demand is caused by other determinants (like income, tastes, etc.).",
+                    "There is no difference; the terms are interchangeable.",
+                    "A change in demand affects supply, while a change in quantity demanded does not."
+                ],
+                correctIndex: 1,
+                explanation: "The Law of Demand (pages 44-46) focuses on the inverse relationship between price and quantity demanded (movement along the curve), holding 'other things' constant. The demand function (page 33-34) lists determinants like income, price of related goods, tastes, etc., which cause shifts in the entire demand curve (change in demand)."
+            },
+            {
+                type: 'mcq',
+                unit: 2,
+                chapterName: 'Demand Supply and Elasticities',
+                question: "The Law of Supply generally states that, other things remaining the same:",
+                options: [
+                    "Higher the price, lower the quantity supplied.",
+                    "Higher the price, higher the quantity supplied.",
+                    "Price and quantity supplied are unrelated.",
+                    "Supply depends only on the number of producers."
+                ],
+                correctIndex: 1,
+                explanation: "Page 58 defines the Law of Supply: '...there is always a positive relationship between price and quantity supplied... higher the price, higher will be the quantity supplied and vice versa.'"
+            },
+            {
+                type: 'mcq',
+                unit: 2,
+                chapterName: 'Demand Supply and Elasticities',
+                question: "Market equilibrium occurs at the price where:",
+                options: [
+                    "Quantity demanded exceeds quantity supplied (excess demand).",
+                    "Quantity supplied exceeds quantity demanded (excess supply).",
+                    "Quantity demanded equals quantity supplied.",
+                    "The price is highest."
+                ],
+                correctIndex: 2,
+                explanation: "Page 62 defines market equilibrium as the situation where the two opposite forces (demand and supply) are equal. 'Market equilibrium is a situation in which demand is equal to the supply at a particular price. i.e. Demand (D) = Supply (S)'."
+            },
+            {
+                type: 'mcq',
+                unit: 2,
+                chapterName: 'Demand Supply and Elasticities',
+                question: "Price Elasticity of Demand (Ep) measures the responsiveness of:",
+                options: [
+                    "Quantity demanded to a change in consumer income.",
+                    "Quantity demanded to a change in the price of another good.",
+                    "Quantity demanded to a change in its own price.",
+                    "Quantity supplied to a change in its price."
+                ],
+                correctIndex: 2,
+                explanation: "Page 69 defines Price Elasticity of Demand as 'the responsiveness of quantity demanded of a commodity due to a change in its price'. It's calculated as the percentage change in quantity demanded divided by the percentage change in price."
+            },
+            {
+                type: 'critical_thinking',
+                unit: 2,
+                chapterName: 'Demand Supply and Elasticities',
+                question: "Explain how the concept of Price Elasticity of Demand is crucial for a software development company when setting the price for its new product. Consider scenarios for both elastic and inelastic demand.",
+                explanation: "Guidance: Your explanation should cover:\n1. Definition of Price Elasticity of Demand (responsiveness of Qd to price change).\n2. Scenario 1 (Elastic Demand, Ep > 1): If demand is elastic, a small price change leads to a larger change in quantity demanded. How would this influence pricing strategy (e.g., lower price to increase total revenue)?\n3. Scenario 2 (Inelastic Demand, Ep < 1): If demand is inelastic, a price change leads to a smaller change in quantity demanded. How would this influence pricing strategy (e.g., possibility of increasing price to increase total revenue)?\n4. Factors influencing elasticity for software (e.g., availability of substitutes, necessity, proportion of budget).\n5. Link to the company's goal (e.g., maximizing revenue or profit)."
+            },
+             // Unit 3: Theory of Consumer Behavior (7 MCQs, 2 CT)
+            {
+                type: 'mcq',
+                unit: 3,
+                chapterName: 'Theory of Consumer Behavior',
+                question: "In economics, 'utility' is best defined as:",
+                options: [
+                    "The monetary price of a good.",
+                    "The usefulness or practicality of a good.",
+                    "The need-satisfying capacity or satisfaction derived from consuming a good.",
+                    "The availability of a good in the market."
+                ],
+                correctIndex: 2,
+                explanation: "Page 95 defines utility as the 'needs satisfying capacity consisting in the goods and services' or the 'pleasure or satisfaction that fulfils human desire and needs'."
+            },
+            {
+                type: 'mcq',
+                unit: 3,
+                chapterName: 'Theory of Consumer Behavior',
+                question: "According to the relationship between Total Utility (TU) and Marginal Utility (MU), when MU is zero:",
+                options: [
+                    "TU is also zero.",
+                    "TU is negative.",
+                    "TU is at its maximum.",
+                    "TU is increasing at an increasing rate."
+                ],
+                correctIndex: 2,
+                explanation: "Page 100 explicitly states the relationship: 'When MU=0, TU is maximum and constant'."
+            },
+            {
+                type: 'mcq',
+                unit: 3,
+                chapterName: 'Theory of Consumer Behavior',
+                question: "The Law of Diminishing Marginal Utility states that:",
+                options: [
+                    "Total utility always decreases as consumption increases.",
+                    "The utility from consuming successive units of a good eventually increases.",
+                    "As a consumer consumes more units of a good, the additional utility from each extra unit eventually decreases.",
+                    "Marginal utility is constant for all units consumed."
+                ],
+                correctIndex: 2,
+                explanation: "Page 105 explains this law: 'when a consumer consumes additional units of a particular goods, then he/she derives less and less utility from every successive unit of goods. It means additional units give lower utility than the previous one.' MU continuously declines."
+            },
+            {
+                type: 'mcq',
+                unit: 3,
+                chapterName: 'Theory of Consumer Behavior',
+                question: "What is the key difference between Cardinal and Ordinal utility analysis?",
+                options: [
+                    "Cardinal assumes utility increases, Ordinal assumes it decreases.",
+                    "Cardinal measures utility in numerical units, while Ordinal ranks preferences.",
+                    "Cardinal applies to goods, Ordinal applies to services.",
+                    "Cardinal was developed by Hicks, Ordinal by Marshall."
+                ],
+                correctIndex: 1,
+                explanation: "Page 101 states Cardinal utility can be measured in numbers (like 1,2,3). Page 102 states Ordinal utility 'does not measure the utility quantitatively but in order or rank'."
+            },
+             {
+                type: 'mcq',
+                unit: 3,
+                chapterName: 'Theory of Consumer Behavior',
+                question: "Which of the following is NOT a property of a standard Indifference Curve?",
+                options: [
+                    "Downward sloping from left to right.",
+                    "Convex to the origin.",
+                    "Indifference curves can intersect each other.",
+                    "Higher indifference curves represent higher levels of satisfaction."
+                ],
+                correctIndex: 2,
+                explanation: "Pages 120-124 list the properties. Indifference curves slope downward (Property 1), are convex (Property 2), higher curves mean higher satisfaction (Property 3), but they NEVER intersect (Property 4)."
+            },
+            {
+                type: 'mcq',
+                unit: 3,
+                chapterName: 'Theory of Consumer Behavior',
+                question: "The Marginal Rate of Substitution (MRS) on an indifference curve measures:",
+                options: [
+                    "The total utility gained from both goods.",
+                    "The rate at which a consumer is willing to trade one good for another while maintaining the same level of satisfaction.",
+                    "The ratio of the prices of the two goods.",
+                    "The point where the budget line touches the indifference curve."
+                ],
+                correctIndex: 1,
+                explanation: "Page 119 defines MRS as 'the rate of sacrificing one commodity for another commodity but the consumer attains at the same level of satisfaction'. It represents the slope of the indifference curve."
+            },
+            {
+                type: 'mcq',
+                unit: 3,
+                chapterName: 'Theory of Consumer Behavior',
+                question: "According to Ordinal Utility Analysis, a consumer is in equilibrium when:",
+                options: [
+                    "Their income is maximized.",
+                    "The marginal utility of both goods is zero.",
+                    "The budget line is tangent to the highest possible indifference curve.",
+                    "They consume equal quantities of both goods."
+                ],
+                correctIndex: 2,
+                explanation: "Consumer equilibrium in ordinal analysis (pages 130-133) occurs where the budget line is tangent to an indifference curve. This means the slope of the budget line (Px/Py) equals the slope of the indifference curve (MRSxy), and the IC is convex (satisfying both necessary and sufficient conditions)."
+            },
+             {
+                type: 'critical_thinking',
+                unit: 3,
+                chapterName: 'Theory of Consumer Behavior',
+                question: "Compare and contrast the Cardinal (Marshallian) and Ordinal (Hicksian) approaches to analyzing consumer behavior. Which approach do you find more realistic in explaining how individuals actually make choices, and why?",
+                explanation: "Guidance: Discuss the core assumptions of each approach:\n1. Cardinal: Measurable utility (utils), constant MU of money, independent utilities, diminishing MU.\n2. Ordinal: Rankable preferences (not measurable), diminishing MRS, consistency, transitivity, non-satiety.\nCompare their methods: Cardinal uses MU=P relationship, Ordinal uses Indifference Curves and Budget Lines.\nEvaluate realism: Can utility truly be measured numerically? Is ranking preferences more intuitive? Does the assumption of constant MU of money hold? Acknowledge the strengths and weaknesses of both, concluding with your reasoned preference based on perceived realism."
+            },
+            {
+                type: 'critical_thinking',
+                unit: 3,
+                chapterName: 'Theory of Consumer Behavior',
+                question: "Using indifference curves and budget lines, illustrate and explain how a fall in the price of Good X (assuming it's a normal good) can be decomposed into the Substitution Effect and Income Effect using the Hicksian approach.",
+                explanation: "Guidance: Your answer should include:\n1. A clear diagram with axes (Good X, Good Y), initial budget line (AB), initial indifference curve (IC1), and initial equilibrium (P).\n2. Show the new budget line (AB1) after the price of X falls, the new higher indifference curve (IC2), and the final equilibrium (R).\n3. Explain the total Price Effect (movement from P to R, increasing consumption of X).\n4. Illustrate the Hicksian compensation: Draw a hypothetical budget line parallel to the new one (AB1) but tangent to the original indifference curve (IC1) at point Q.\n5. Explain the Substitution Effect (movement along IC1 from P to Q) - buying more X because it's relatively cheaper.\n6. Explain the Income Effect (movement from Q on IC1 to R on IC2) - buying more X because the fall in price increased real income (purchasing power).\n7. State Price Effect = Substitution Effect + Income Effect (Graphically: X1 to X3 = X1 to X2 + X2 to X3)."
+            },
+             // Unit 4: Cost and Revenue Curves (6 MCQs, 1 CT)
+            {
+                type: 'mcq',
+                unit: 4,
+                chapterName: 'Cost and Revenue Curves',
+                question: "The cost of resources owned and used by the firm owner in the production process (like the owner's forgone salary) is known as:",
+                options: [
+                    "Explicit Cost",
+                    "Accounting Cost",
+                    "Implicit Cost",
+                    "Variable Cost"
+                ],
+                correctIndex: 2,
+                explanation: "Page 156 defines Implicit cost as 'the value of factor inputs that are owned and used by the firm owner himself/herself in the production process'. It contrasts with Explicit cost, which involves direct monetary payments for factors not owned by the firm."
+            },
+             {
+                type: 'mcq',
+                unit: 4,
+                chapterName: 'Cost and Revenue Curves',
+                question: "Opportunity Cost refers to:",
+                options: [
+                    "The total monetary expenditure on inputs.",
+                    "The cost that changes with the level of output.",
+                    "The loss of earnings from the best alternative foregone.",
+                    "The cost that remains constant regardless of output."
+                ],
+                correctIndex: 2,
+                explanation: "Page 155 defines Opportunity cost as 'the loss of earnings due to opportunities foregone due to scarcity of resources' or 'what an input could earn in its best alternative job'."
+            },
+            {
+                type: 'mcq',
+                unit: 4,
+                chapterName: 'Cost and Revenue Curves',
+                question: "In the short run, the Marginal Cost (MC) curve intersects the Average Cost (AC) curve:",
+                options: [
+                    "At the maximum point of the AC curve.",
+                    "At the minimum point of the AC curve.",
+                    "When the AC curve is still falling.",
+                    "MC never intersects AC."
+                ],
+                correctIndex: 1,
+                explanation: "Page 179 states the relationship: 'When AC is minimum, MC equals to the AC. in other words, MC always cuts AC at its minimum points.'"
+            },
+             {
+                type: 'mcq',
+                unit: 4,
+                chapterName: 'Cost and Revenue Curves',
+                question: "The shape of the Average Fixed Cost (AFC) curve is typically:",
+                options: [
+                    "U-shaped",
+                    "Upward sloping",
+                    "A horizontal line",
+                    "Downward sloping / rectangular hyperbola"
+                ],
+                correctIndex: 3,
+                explanation: "AFC = TFC/Q. Since TFC is constant, as Quantity (Q) increases, AFC continuously declines. Page 169 notes 'AFC declines as output increases. So, it is downward sloping...'. This results in a shape approaching a rectangular hyperbola."
+            },
+             {
+                type: 'mcq',
+                unit: 4,
+                chapterName: 'Cost and Revenue Curves',
+                question: "Why are the short-run Average Variable Cost (AVC) and Average Total Cost (AC) curves typically U-shaped?",
+                options: [
+                    "Due to constant returns to scale.",
+                    "Because fixed costs decline initially and then rise.",
+                    "Due to the Law of Variable Proportions (initially increasing, then diminishing returns).",
+                    "Because marginal cost is always constant."
+                ],
+                correctIndex: 2,
+                explanation: "Page 168 explains that the shape of TVC (and thus AVC and AC) follows from the Law of Variable Proportions. Initially, increasing returns lead to falling costs per unit, and later, diminishing returns lead to rising costs per unit, creating the U-shape."
+            },
+            {
+                type: 'mcq',
+                unit: 4,
+                chapterName: 'Cost and Revenue Curves',
+                question: "Average Revenue (AR) is defined as Total Revenue (TR) divided by Quantity (Q). It is also always equal to:",
+                options: [
+                    "Marginal Cost (MC)",
+                    "Total Cost (TC)",
+                    "Price (P)",
+                    "Marginal Revenue (MR)"
+                ],
+                correctIndex: 2,
+                explanation: "Page 197 shows the derivation: AR = TR/Q = (P*Q)/Q = P. Therefore, Average Revenue is always equal to the price per unit."
+            },
+             {
+                type: 'critical_thinking',
+                unit: 4,
+                chapterName: 'Cost and Revenue Curves',
+                question: "Explain the difference between 'Economies of Scale' and 'Economies of Scope'. Provide a hypothetical example for a technology company that might experience both.",
+                explanation: "Guidance:\n1. Define Economies of Scale: Falling long-run average costs as output increases due to factors like specialization, bulk buying, technical efficiencies.\n2. Define Economies of Scope: Cost savings achieved by producing two or more distinct goods jointly rather than separately, often due to shared inputs, marketing, or distribution (Page 188).\n3. Example: A company like Apple. Economies of Scale: Lower average cost per iPhone as production volume increases massively. Economies of Scope: Lower total cost by designing, marketing, and distributing iPhones, iPads, and MacBooks together (sharing R&D, brand name, retail stores) compared to producing each product line in entirely separate companies.\n4. Highlight the key difference: Scale relates to the output level of *one* product, while Scope relates to the *variety* of products."
+            },
+             // Unit 5: Market Structure (5 MCQs, 2 CT)
+             {
+                type: 'mcq',
+                unit: 5,
+                chapterName: 'Market Structure',
+                question: "A key characteristic of a Perfectly Competitive market is:",
+                options: [
+                    "A single seller dominating the market.",
+                    "Significant barriers to entry for new firms.",
+                    "Firms selling homogeneous (identical) products.",
+                    "Widespread price discrimination."
+                ],
+                correctIndex: 2,
+                explanation: "Page 200 lists characteristics of Perfect Competition, including 'Homogeneous products' (point 2) and 'A large number of producers and buyers' (point 1). Firms are price takers selling identical goods."
+            },
+            {
+                type: 'mcq',
+                unit: 5,
+                chapterName: 'Market Structure',
+                question: "In Perfect Competition, the firm's demand curve is horizontal (perfectly elastic) because:",
+                options: [
+                    "There are many buyers.",
+                    "The firm is a price taker and cannot influence the market price.",
+                    "The product is differentiated.",
+                    "There are barriers to entry."
+                ],
+                correctIndex: 1,
+                explanation: "In perfect competition (page 201), the market (industry) sets the price. Each individual firm is so small relative to the market that it must accept this price ('price taker'). It can sell any quantity at the prevailing market price, making its demand curve horizontal (perfectly elastic) at that price. Thus, AR = MR = Price."
+            },
+             {
+                type: 'mcq',
+                unit: 5,
+                chapterName: 'Market Structure',
+                question: "Which of the following is a defining characteristic of a Monopoly market structure?",
+                options: [
+                    "Many firms selling differentiated products.",
+                    "Free entry and exit for firms.",
+                    "A single seller with significant barriers to entry.",
+                    "Firms acting as price takers."
+                ],
+                correctIndex: 2,
+                explanation: "Page 204 lists characteristics of Monopoly, including 'A single seller' (point 1), 'No close substitutes' (point 2), and 'Barriers to entry' (point 3)."
+            },
+            {
+                type: 'mcq',
+                unit: 5,
+                chapterName: 'Market Structure',
+                question: "Under Monopoly, the relationship between Average Revenue (AR) and Marginal Revenue (MR) is:",
+                options: [
+                    "AR = MR",
+                    "AR > MR",
+                    "AR < MR",
+                    "AR is constant, MR is falling"
+                ],
+                correctIndex: 1,
+                explanation: "A monopolist faces a downward-sloping demand curve (AR curve). To sell more, it must lower the price on all units. This causes MR to fall faster than AR. Therefore, for all output levels greater than 1, AR > MR (Page 206-207 diagram and explanation)."
+            },
+            {
+                type: 'mcq',
+                unit: 5,
+                chapterName: 'Market Structure',
+                question: "Selling the same product to different buyers at different prices, where the price difference is not based on cost differences, is known as:",
+                options: [
+                    "Perfect Competition",
+                    "Price Discrimination",
+                    "Market Equilibrium",
+                    "Product Differentiation"
+                ],
+                correctIndex: 1,
+                explanation: "Page 204 lists 'Price discrimination is possible' as a characteristic (point 6) of Monopoly. The syllabus also mentions degrees of price discrimination under the Monopoly section (Unit 5b)."
+            },
+            {
+                type: 'critical_thinking',
+                unit: 5,
+                chapterName: 'Market Structure',
+                question: "Explain why a firm in a perfectly competitive market is considered a 'price taker', while a monopolist is a 'price maker'. How does this difference affect the shape of the demand curve faced by each type of firm?",
+                explanation: "Guidance:\n1. Perfect Competition: Explain the 'price taker' concept - many firms, homogeneous product, no individual firm can influence market price (determined by industry D&S). Demand curve faced by the *firm* is perfectly elastic (horizontal) at the market price (AR=MR=P). Diagram recommended.\n2. Monopoly: Explain the 'price maker' concept - single seller, controls supply, faces the entire market demand curve, can choose price (or quantity). Demand curve faced by the monopolist *is* the market demand curve, which is downward sloping (AR=P, but MR < AR). Diagram recommended.\n3. Contrast: Emphasize the firm's influence over price and the resulting demand elasticity differences."
+            },
+            {
+                type: 'critical_thinking',
+                unit: 5,
+                chapterName: 'Market Structure',
+                question: "Compare the long-run equilibrium outcomes for a firm under Perfect Competition versus a firm under Monopoly, considering price, output, and economic profit.",
+                explanation: "Guidance:\n1. Perfect Competition Long-Run Equilibrium: Explain that due to free entry/exit, firms will earn only *normal profit* (zero economic profit). Equilibrium occurs where P = min LAC = LMC. Firms produce at the minimum efficient scale, leading to allocative (P=MC) and productive (P=min AC) efficiency. Diagram recommended.\n2. Monopoly Long-Run Equilibrium: Explain that due to barriers to entry, a monopolist can potentially earn *supernormal (economic) profit* even in the long run. Equilibrium occurs where LMC = MR, with price determined by the demand curve at that quantity (P > LMC, P > min LAC typically). Output is generally lower and price higher than in perfect competition. Leads to allocative inefficiency (P>MC) and potentially productive inefficiency (not producing at min LAC). Diagram recommended.\n3. Summarize Key Differences: Profit (Normal vs. Supernormal), Price (Lower vs. Higher), Output (Higher vs. Lower), Efficiency (More vs. Less)."
+            },
+             // Unit 6: National Income Accounting (3 MCQs)
+            {
+                type: 'mcq',
+                unit: 6,
+                chapterName: 'National Income Accounting',
+                question: "Gross Domestic Product (GDP) measures the total market value of:",
+                options: [
+                    "All goods and services produced by a country's citizens, regardless of location.",
+                    "All final goods and services produced within a country's borders in a specific period.",
+                    "All intermediate goods used in production.",
+                    "The income received by households only."
+                ],
+                correctIndex: 1,
+                explanation: "GDP (Gross Domestic Product) focuses on production *within* a country's geographical boundaries during a specific time period, including output produced by foreign-owned resources located domestically. GNP (Gross National Product) focuses on production by a country's citizens/nationals, regardless of where they are located. (Based on standard definitions referenced in Unit 6a syllabus)."
+            },
+            {
+                type: 'mcq',
+                unit: 6,
+                chapterName: 'National Income Accounting',
+                question: "The difference between Nominal GDP and Real GDP is that Real GDP:",
+                options: [
+                    "Includes unpaid work, while Nominal GDP does not.",
+                    "Is measured in current year prices, while Nominal GDP uses base year prices.",
+                    "Is adjusted for inflation (using base year prices), while Nominal GDP uses current prices.",
+                    "Excludes taxes, while Nominal GDP includes them."
+                ],
+                correctIndex: 2,
+                explanation: "Nominal GDP measures output using current market prices, so it reflects changes in both quantity and price levels. Real GDP measures output using constant (base year) prices, isolating changes in quantity and thus adjusting for inflation. (Unit 6a syllabus mention)."
+            },
+            {
+                type: 'mcq',
+                unit: 6,
+                chapterName: 'National Income Accounting',
+                question: "Per Capita Income (PCI) is calculated as:",
+                options: [
+                    "GDP divided by the total labor force.",
+                    "National Income divided by the total population.",
+                    "Gross National Product minus depreciation.",
+                    "Personal Income minus direct taxes."
+                ],
+                correctIndex: 1,
+                explanation: "Per Capita Income typically represents the average income per person in a country and is usually calculated by dividing a measure of total income (like National Income or sometimes GDP/GNP) by the total population. (Unit 6a syllabus mention)."
+            },
+             // Unit 7: Forms of Business Organization (2 MCQs)
+            {
+                type: 'mcq',
+                unit: 7,
+                chapterName: 'Forms of Business Organization',
+                question: "Which form of business organization is owned and usually managed by a single individual, who assumes all risks and profits?",
+                options: [
+                    "Partnership",
+                    "Joint Stock Company",
+                    "Sole Trading Concern (Sole Proprietorship)",
+                    "State Owned Enterprise"
+                ],
+                correctIndex: 2,
+                explanation: "A Sole Trading Concern (or Sole Proprietorship) is characterized by single ownership, direct control, and unlimited liability, where the owner receives all profits but also bears all losses. (Unit 7a syllabus mention)."
+            },
+            {
+                type: 'mcq',
+                unit: 7,
+                chapterName: 'Forms of Business Organization',
+                question: "A key feature that distinguishes a Joint Stock Company from a Partnership is:",
+                options: [
+                    "Profit motive",
+                    "Multiple owners",
+                    "Legal existence separate from its owners (separate legal entity) and limited liability.",
+                    "Requirement to pay taxes"
+                ],
+                correctIndex: 2,
+                explanation: "Joint Stock Companies are incorporated entities, meaning they have a legal identity separate from their shareholders. This grants shareholders limited liability, unlike partnerships where partners typically have unlimited liability and the firm isn't legally distinct. (Unit 7b, 7c syllabus mentions)."
+            },
+             // Unit 8: Money, Inflation, Banking and International Trade (5 MCQs, 1 CT)
+            {
+                type: 'mcq',
+                unit: 8,
+                chapterName: 'Money, Inflation, Banking and International Trade',
+                question: "Which of the following is considered a primary function of money?",
+                options: [
+                    "Store of Value",
+                    "Medium of Exchange",
+                    "Unit of Account",
+                    "Standard of Deferred Payment"
+                ],
+                correctIndex: 1,
+                explanation: "While all options are functions of money, the 'Medium of Exchange' (facilitating transactions) is universally considered the most fundamental or primary function, distinguishing money from other assets. (Unit 8a syllabus mention)."
+            },
+            {
+                type: 'mcq',
+                unit: 8,
+                chapterName: 'Money, Inflation, Banking and International Trade',
+                question: "Inflation is generally defined as:",
+                options: [
+                    "A decrease in the general price level.",
+                    "A sustained increase in the general price level.",
+                    "An increase in the value of money.",
+                    "A decrease in the money supply."
+                ],
+                correctIndex: 1,
+                explanation: "Inflation refers to a persistent rise in the overall level of prices for goods and services in an economy over time, leading to a decrease in the purchasing power of money. (Unit 8b syllabus mention)."
+            },
+            {
+                type: 'mcq',
+                unit: 8,
+                chapterName: 'Money, Inflation, Banking and International Trade',
+                question: "The type of inflation caused by 'too much money chasing too few goods' is known as:",
+                options: [
+                    "Cost-push inflation",
+                    "Demand-pull inflation",
+                    "Stagflation",
+                    "Deflation"
+                ],
+                correctIndex: 1,
+                explanation: "Demand-pull inflation occurs when aggregate demand in an economy outpaces aggregate supply, leading to upward pressure on prices. This is often characterized as 'too much money chasing too few goods'. Cost-push inflation arises from increases in production costs. (Unit 8b syllabus mention)."
+            },
+             {
+                type: 'mcq',
+                unit: 8,
+                chapterName: 'Money, Inflation, Banking and International Trade',
+                question: "Which institution typically acts as the 'lender of last resort' and manages monetary policy in a country like Nepal?",
+                options: [
+                    "Commercial Banks",
+                    "The Ministry of Finance",
+                    "The Central Bank (Nepal Rastra Bank)",
+                    "The Stock Exchange"
+                ],
+                correctIndex: 2,
+                explanation: "Central banks, like Nepal Rastra Bank mentioned in the syllabus (Unit 8c), are responsible for overseeing the banking system, conducting monetary policy, and acting as a lender of last resort to commercial banks during financial difficulties."
+            },
+            {
+                type: 'mcq',
+                unit: 8,
+                chapterName: 'Money, Inflation, Banking and International Trade',
+                question: "The Balance of Trade (BOT) specifically measures:",
+                options: [
+                    "A country's total financial transactions with the rest of the world.",
+                    "The difference between a country's merchandise exports and merchandise imports.",
+                    "The flow of capital investment.",
+                    "Government borrowing from international institutions."
+                ],
+                correctIndex: 1,
+                explanation: "The Balance of Trade (BOT) is a component of the Balance of Payments (BOP). BOT focuses narrowly on the difference between the value of visible exports (goods) and visible imports (goods). The BOP is a broader measure including trade in services, income flows, and capital transfers. (Unit 8d syllabus mention)."
+            },
+            {
+                type: 'critical_thinking',
+                unit: 8,
+                chapterName: 'Money, Inflation, Banking and International Trade',
+                question: "Discuss the potential negative effects of high and volatile inflation on businesses operating in the IT sector in a developing economy like Nepal.",
+                explanation: "Guidance: Consider impacts on:\n1. Costs: Rising input costs (salaries for skilled labor, imported hardware/software, energy), making budgeting difficult.\n2. Pricing: Difficulty in setting stable prices for services/products; frequent adjustments may annoy clients.\n3. Investment Decisions: Uncertainty discourages long-term investment in R&D, infrastructure, and expansion due to unpredictable future costs and returns.\n4. Competitiveness: If domestic inflation is higher than international competitors', Nepali IT firms might become less price-competitive in the global market (especially for exports/outsourcing).\n5. Employee Morale/Wages: Pressure for wage increases to keep up with the cost of living, potentially straining finances.\n6. Borrowing Costs: Interest rates often rise with inflation, making loans more expensive."
+            }
+        ];
+
+
+        const quizContainer = document.getElementById('quiz-container');
+        const questionArea = document.getElementById('question-area');
+        const unitTopicEl = document.getElementById('unit-topic');
+        const questionTextEl = document.getElementById('question-text');
+        const optionsArea = document.getElementById('options-area');
+        const ctNoteEl = document.getElementById('ct-note');
+        const interactionArea = document.getElementById('interaction-area');
+        const submitBtn = document.getElementById('submit-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const feedbackArea = document.getElementById('feedback-area');
+        const feedbackTextEl = document.getElementById('feedback-text');
+        const explanationTextEl = document.getElementById('explanation-text');
+        const scoreEl = document.getElementById('score');
+        const resultsScreen = document.getElementById('results-screen');
+        const finalScoreEl = document.getElementById('final-score');
+        const percentageEl = document.getElementById('percentage');
+        const restartBtn = document.getElementById('restart-btn');
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let mcqAttempted = 0;
+        let mcqTotal = 0;
+        let shuffledQuestions = [];
+        let ctProceedState = 0; // 0: initial, 1: guidance shown
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function loadQuestion() {
+            ctProceedState = 0; // Reset CT state for new question
+            feedbackArea.style.display = 'none';
+            nextBtn.style.display = 'none';
+            submitBtn.style.display = 'block';
+            submitBtn.disabled = true; // Disable until an option is selected for MCQs
+            optionsArea.innerHTML = ''; // Clear previous options/textarea
+            ctNoteEl.style.display = 'none'; // Hide CT note by default
+
+            if (currentQuestionIndex >= shuffledQuestions.length) {
+                showResults();
+                return;
+            }
+
+            const currentQuestion = shuffledQuestions[currentQuestionIndex];
+            unitTopicEl.textContent = `Unit ${currentQuestion.unit}: ${currentQuestion.chapterName}`;
+            questionTextEl.textContent = `Q${currentQuestionIndex + 1}: ${currentQuestion.question}`;
+
+            if (currentQuestion.type === 'mcq') {
+                submitBtn.textContent = 'Submit Answer';
+                currentQuestion.options.forEach((option, index) => {
+                    const label = document.createElement('label');
+                    label.setAttribute('for', `option${index}`)
+                    const radio = document.createElement('input');
+                    radio.type = 'radio';
+                    radio.name = 'option';
+                    radio.value = index;
+                    radio.id = `option${index}`;
+                    radio.addEventListener('change', () => {
+                         // Remove 'selected' class from all labels first
+                        document.querySelectorAll('#options-area label').forEach(lbl => lbl.classList.remove('selected'));
+                        // Add 'selected' class to the clicked label
+                        label.classList.add('selected');
+                        submitBtn.disabled = false;
+                    });
+                    label.appendChild(radio);
+                    label.appendChild(document.createTextNode(option));
+                    optionsArea.appendChild(label);
+                });
+            } else if (currentQuestion.type === 'critical_thinking') {
+                ctNoteEl.style.display = 'block'; // Show CT note
+                const textarea = document.createElement('textarea');
+                textarea.placeholder = "Enter your thoughts here (for self-reflection)...";
+                optionsArea.appendChild(textarea);
+                submitBtn.textContent = 'Proceed / Show Guidance';
+                submitBtn.disabled = false; // Enable immediately for CT
+            }
+            updateScoreDisplay();
+        }
+
+         function updateScoreDisplay() {
+            scoreEl.textContent = `MC Score: ${score} / ${mcqAttempted}`;
+        }
+
+        function submitAnswer() {
+            const currentQuestion = shuffledQuestions[currentQuestionIndex];
+
+            if (currentQuestion.type === 'mcq') {
+                const selectedOption = document.querySelector('input[name="option"]:checked');
+                if (!selectedOption) return; // Should not happen if button is enabled correctly
+
+                mcqAttempted++;
+                const answerIndex = parseInt(selectedOption.value);
+                const correct = answerIndex === currentQuestion.correctIndex;
+
+                feedbackArea.style.display = 'block';
+                feedbackTextEl.textContent = correct ? 'Correct!' : 'Incorrect!';
+                explanationTextEl.innerHTML = `<b>Explanation:</b> ${currentQuestion.explanation}`; // Use innerHTML if explanation contains HTML
+
+                // Disable radio buttons and update styles
+                const labels = optionsArea.querySelectorAll('label');
+                labels.forEach((label, index) => {
+                    const radio = label.querySelector('input');
+                    radio.disabled = true;
+                    label.classList.add('disabled'); // Add disabled class for styling
+                    label.classList.remove('selected'); // Remove selected highlight
+
+                    if (index === currentQuestion.correctIndex) {
+                        label.classList.add('correct');
+                    }
+                    if (index === answerIndex) {
+                         if(!correct) {
+                             label.classList.add('incorrect');
+                         }
+                    }
+                });
+
+
+                if (correct) {
+                    score++;
+                }
+
+                submitBtn.style.display = 'none';
+                nextBtn.style.display = 'block';
+                updateScoreDisplay();
+
+            } else if (currentQuestion.type === 'critical_thinking') {
+                // Handle CT proceed logic
+                handleCTProceed();
+            }
+        }
+
+
+        function handleCTProceed() {
+             const currentQuestion = shuffledQuestions[currentQuestionIndex];
+             if (ctProceedState === 0) {
+                // First click: Show guidance
+                feedbackArea.style.display = 'block';
+                feedbackTextEl.textContent = 'Guidance:';
+                explanationTextEl.innerHTML = currentQuestion.explanation; // Use innerHTML for potential formatting
+                submitBtn.textContent = 'Next Question';
+                ctProceedState = 1;
+             } else {
+                 // Second click: Load next question
+                 loadNextQuestion();
+             }
+        }
+
+        function loadNextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < shuffledQuestions.length) {
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function showResults() {
+            quizContainer.style.display = 'none';
+            resultsScreen.style.display = 'block';
+
+            const totalMCQs = shuffledQuestions.filter(q => q.type === 'mcq').length;
+            finalScoreEl.textContent = `Final Multiple Choice Score: ${score} out of ${totalMCQs}`;
+            const percentage = totalMCQs > 0 ? ((score / totalMCQs) * 100).toFixed(1) : 0;
+            percentageEl.textContent = `Percentage: ${percentage}%`;
+        }
+
+        function restartQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            mcqAttempted = 0;
+            shuffledQuestions = shuffleArray([...quizData]); // Reshuffle
+            resultsScreen.style.display = 'none';
+            quizContainer.style.display = 'block';
+            loadQuestion();
+        }
+
+        // Initial setup
+        submitBtn.addEventListener('click', submitAnswer);
+        nextBtn.addEventListener('click', loadNextQuestion);
+        restartBtn.addEventListener('click', restartQuiz);
+
+        // Start quiz on load
+        shuffledQuestions = shuffleArray([...quizData]);
+        mcqTotal = shuffledQuestions.filter(q => q.type === 'mcq').length;
+        loadQuestion();
+
+    </script>
+    </body>
+</html>
