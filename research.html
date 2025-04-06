@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Research Methodology (BCT 304) Quiz</title>
+        <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        #quiz-container {
+            max-width: 800px;
+            margin: auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+        h1, h2 {
+            text-align: center;
+            color: #007bff;
+        }
+        #question-area {
+            margin-bottom: 20px;
+        }
+        #question-context {
+            font-size: 0.9em;
+            color: #555;
+            margin-bottom: 10px;
+            font-style: italic;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+        #question-text {
+            font-size: 1.2em;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+        .options label {
+            display: block;
+            margin-bottom: 10px;
+            padding: 10px;
+            background: #eee;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .options label:hover {
+            background: #ddd;
+        }
+        .options input[type="radio"] {
+            margin-right: 10px;
+        }
+        #critical-thinking-answer {
+            width: 95%;
+            min-height: 100px;
+            padding: 10px;
+            margin-top: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+        #feedback-area {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 5px solid;
+        }
+        .feedback-correct {
+            background-color: #e9f7ef;
+            border-color: #28a745;
+            color: #155724;
+        }
+        .feedback-incorrect {
+            background-color: #f8d7da;
+            border-color: #dc3545;
+            color: #721c24;
+        }
+        .feedback-guidance {
+            background-color: #e2e3e5;
+            border-color: #6c757d;
+            color: #383d41;
+        }
+        .explanation {
+            margin-top: 10px;
+            font-size: 0.95em;
+        }
+        button {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background-color 0.3s;
+        }
+        button:hover:not(:disabled) {
+            background-color: #0056b3;
+        }
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        #score-area {
+            margin-top: 10px;
+            font-weight: bold;
+            text-align: right;
+        }
+        #results-area {
+            text-align: center;
+            padding: 20px;
+        }
+        .highlight-correct {
+            background-color: #c3e6cb !important; /* Light green */
+            font-weight: bold;
+        }
+        .highlight-incorrect {
+            background-color: #f5c6cb !important; /* Light red */
+        }
+        .options input[type="radio"]:disabled + span {
+             color: #6c757d;
+        }
+        label.disabled {
+            cursor: default;
+            background: #f8f9fa;
+             opacity: 0.7;
+        }
+        label.disabled:hover {
+            background: #f8f9fa;
+        }
+         .ct-note {
+            font-size: 0.9em;
+            color: #6c757d;
+            margin-bottom: 10px;
+        }
+
+    </style>
+    </head>
+    <body>
+
+        <div id="quiz-container">
+            <h1>Research Methodology (BCT 304) Quiz</h1>
+
+            <div id="question-area" style="display: none;">
+                <div id="question-context"></div>
+                <div id="question-text"></div>
+                <div class="options" id="mcq-options"></div>
+                <div id="critical-thinking-area" style="display: none;">
+                    <div class="ct-note">Your reflection below is for
+                        self-assessment and is not graded.</div>
+                    <textarea id="critical-thinking-answer"
+                        placeholder="Reflect on the question here..."></textarea>
+                </div>
+                <div id="feedback-area" style="display: none;"></div>
+                <button id="submit-button" disabled>Submit Answer</button>
+                <button id="proceed-button" style="display: none;">Proceed /
+                    Show Guidance</button>
+                <button id="next-button" style="display: none;">Next
+                    Question</button>
+                <div id="score-area">MC Score: 0 / 0</div>
+            </div>
+
+            <div id="results-area" style="display: none;">
+                <h2>Quiz Completed!</h2>
+                <p id="final-score">Your final MCQ score is: 0 / 0 (0%)</p>
+                <p>Note: Only Multiple Choice Questions were automatically
+                    scored.</p>
+                <button id="restart-button">Restart Quiz</button>
+            </div>
+
+            <button id="start-button">Start Quiz</button>
+
+        </div>
+
+        <script>
+            const quizData = [
+            // Unit I: Introduction to the Research (LH 7) - 8 Qs
+            {
+                type: 'mcq',
+                unit: 1,
+                chapterName: 'Introduction to the Research',
+                question: 'What is the primary definition of research provided in the material?',
+                options: [
+                    'Simply gathering information from various sources.',
+                    'A random effort to find interesting facts.',
+                    'A systematic and organized effort to gain new knowledge, solve problems, or validate theories.',
+                    'A quick process for making business decisions.'
+                ],
+                correctIndex: 2,
+                explanation: 'Page 3 defines research as a "systematic and organized effort to gain new knowledge, solve problems, or validate existing theories through a structured process." Option A describes information gathering (page 4 contrasts this with research), B is incorrect as research is not random, and D is too narrow.'
+            },
+            {
+                type: 'mcq',
+                unit: 1,
+                chapterName: 'Introduction to the Research',
+                question: 'Which key characteristic of research emphasizes reliance on observable evidence?',
+                options: [
+                    'Systematic',
+                    'Empirical',
+                    'Logical',
+                    'Replicable'
+                ],
+                correctIndex: 1,
+                explanation: 'Page 3 lists "Empirical: Relies on observable evidence" as a key characteristic. Systematic refers to the planned approach, Logical to the rational process, and Replicable to the verifiability of results.'
+            },
+            {
+                type: 'mcq',
+                unit: 1,
+                chapterName: 'Introduction to the Research',
+                question: 'According to the objectives listed (page 6), research aimed at gaining familiarity with a phenomenon or achieving new insights is termed:',
+                options: [
+                    'Descriptive research',
+                    'Diagnostic research',
+                    'Hypothesis-testing research',
+                    'Exploratory or formulative research'
+                ],
+                correctIndex: 3,
+                explanation: 'Page 6 explicitly states that studies aiming "To gain familiarity with a phenomenon or to achieve new insights into it" are termed exploratory or formulative research studies.'
+            },
+            {
+                type: 'mcq',
+                unit: 1,
+                chapterName: 'Introduction to the Research',
+                question: 'Which type of research focuses on solving specific, real-world problems and addresses immediate concerns?',
+                options: [
+                    'Basic Research',
+                    'Applied Research',
+                    'Quantitative Research',
+                    'Qualitative Research'
+                ],
+                correctIndex: 1,
+                explanation: 'Page 9 defines Applied Research as involving the "Practical application of knowledge," solving "specific, real-world problems," and addressing "immediate concerns." Basic research expands theory, while quantitative and qualitative describe data types/methods.'
+            },
+            {
+                type: 'mcq',
+                unit: 1,
+                chapterName: 'Introduction to the Research',
+                question: 'The research paradigm that assumes reality is objective and knowledge can be discovered through empirical observation and measurement is:',
+                options: [
+                    'Interpretivism',
+                    'Critical Theory',
+                    'Positivism',
+                    'Pragmatism'
+                ],
+                correctIndex: 2,
+                explanation: 'Page 23 defines Positivism with the key tenet: "Reality is objective, and knowledge can be discovered through empirical observation and measurement." Interpretivism sees reality as subjective, and Critical Theory focuses on social critique.'
+            },
+            {
+                type: 'mcq',
+                unit: 1,
+                chapterName: 'Introduction to the Research',
+                question: 'Which principle of scientific research in IT emphasizes minimizing biases and ensuring findings are not influenced by personal beliefs?',
+                options: [
+                    'Empirical Evidence',
+                    'Replicability',
+                    'Objectivity',
+                    'Validity'
+                ],
+                correctIndex: 2,
+                explanation: 'Page 16 defines Objectivity in IT research as striving "to maintain objectivity by minimizing biases and ensuring that their findings are not influenced by personal beliefs or preferences."'
+            },
+            {
+                type: 'critical_thinking',
+                unit: 1,
+                chapterName: 'Introduction to the Research',
+                question: 'Contrast the Deductive and Inductive approaches to research (page 26). Provide a simple, original example (not from the slides) of how each might be applied in an IT context.',
+                explanation: 'Guidance: Focus on the starting point and direction of reasoning. Deduction starts with a general theory/hypothesis and tests it with specific data (e.g., Theory: Agile methods reduce bug rates. Hypothesis: Implementing Scrum will lead to fewer bugs in Project X. Method: Measure bug rates before/after Scrum). Induction starts with specific observations and builds towards a general theory (e.g., Observation: Users in usability tests A, B, and C consistently struggled with the new checkout process. Pattern: The process flow seems confusing. Theory: Complex multi-step checkout processes negatively impact user experience.).'
+            },
+            {
+                type: 'critical_thinking',
+                unit: 1,
+                chapterName: 'Introduction to the Research',
+                question: 'Page 11 outlines ethical considerations like participant consent, confidentiality, and integrity. Why are these particularly crucial in IT research, considering areas like data science and AI (pages 19-20)?',
+                explanation: 'Guidance: Consider the nature of IT data (often personal, large-scale), the potential impact of algorithms (bias, fairness - page 47), and security vulnerabilities (page 46). Lack of consent/confidentiality in data science can lead to privacy breaches. Biased AI algorithms can perpetuate discrimination. Lack of integrity can erode trust in technology. IT research often deals with sensitive data and systems with significant societal impact, amplifying the importance of ethical conduct.'
+            },
+            // Unit II: Literature Review (LH 5) - 6 Qs
+            {
+                type: 'mcq',
+                unit: 2,
+                chapterName: 'Literature Review',
+                question: 'What is a primary purpose of conducting a literature review, according to page 60?',
+                options: [
+                    'To prove the researcher\'s hypothesis correct.',
+                    'To only list all previously published articles on a topic.',
+                    'To identify existing gaps, controversies, or unanswered questions.',
+                    'To provide detailed instructions on data collection methods.'
+                ],
+                correctIndex: 2,
+                explanation: 'Page 60 explicitly lists "Identification of Gaps" as a purpose, stating it aims "To identify existing gaps, controversies, or unanswered questions in the current body of knowledge."'
+            },
+            {
+                type: 'mcq',
+                unit: 2,
+                chapterName: 'Literature Review',
+                question: 'Which step in the literature review process involves using tools like EndNote or Zotero?',
+                options: [
+                    'Define the Scope of the Review',
+                    'Conduct a Systematic Search',
+                    'Organize and Catalog Articles',
+                    'Synthesize and Categorize Information'
+                ],
+                correctIndex: 2,
+                explanation: 'Page 69, under step 7 "Organize and Catalog Articles," mentions using "reference management tools to store, categorize, and annotate articles for efficient retrieval." EndNote and Zotero are examples of such tools.'
+            },
+            {
+                type: 'mcq',
+                unit: 2,
+                chapterName: 'Literature Review',
+                question: 'When selecting appropriate literature, why is giving preference to peer-reviewed publications important (page 74)?',
+                options: [
+                    'They are always the most recently published.',
+                    'They are usually shorter and easier to read.',
+                    'They undergo rigorous review processes, ensuring higher quality and reliability.',
+                    'They are freely available online.'
+                ],
+                correctIndex: 2,
+                explanation: 'Page 74 states that peer-reviewed sources "undergo rigorous review processes, ensuring higher quality and reliability."'
+            },
+            {
+                type: 'mcq',
+                unit: 2,
+                chapterName: 'Literature Review',
+                question: 'Using Boolean operators like AND, OR, NOT is part of which literature review activity (page 80)?',
+                options: [
+                    'Defining Search Terms',
+                    'Enhancing Search Precision',
+                    'Evaluating Website Credibility',
+                    'Citation Tracking'
+                ],
+                correctIndex: 1,
+                explanation: 'Page 80 discusses Boolean Operators under point 3, stating they are used "to enhance search precision" and "combine terms to create complex search queries."'
+            },
+            {
+                type: 'critical_thinking',
+                unit: 2,
+                chapterName: 'Literature Review',
+                question: 'Imagine you are reviewing literature for research on "The adoption of cloud computing in small businesses in Nepal." Based on the steps (pages 67-71) and selection criteria (pages 73-78), outline your strategy for finding and selecting relevant, high-quality sources.',
+                explanation: 'Guidance: Your strategy should mention: 1. Defining Scope (e.g., focus on SMEs in Nepal, last 5-10 years). 2. Keywords (e.g., "cloud computing," "SMEs," "Nepal," "adoption," "challenges," "benefits"). 3. Databases (e.g., Google Scholar, Scopus, local university repositories, NREN). 4. Search Strategy (using Boolean operators). 5. Screening (checking titles/abstracts for relevance). 6. Selection Criteria (prioritizing peer-reviewed journals/conferences, author credibility, relevance to Nepal context, methodology rigor, timeliness). 7. Organization (using reference manager).'
+            },
+            {
+                type: 'critical_thinking',
+                unit: 2,
+                chapterName: 'Literature Review',
+                question: 'Page 86 emphasizes aligning the literature review with research goals. How does a well-written literature review (synthesizing information, identifying gaps - page 64) directly contribute to formulating clear research questions and objectives for a new study?',
+                explanation: 'Guidance: A literature review provides context (page 62) by showing what is already known. Synthesizing information reveals established theories, methods, and findings. Critically analyzing this (page 64) helps identify gaps, contradictions, or areas needing further investigation. These identified gaps directly inform the formulation of specific, relevant research questions that the new study aims to answer (page 65). The review demonstrates the need for the research and helps define achievable objectives based on the current state of knowledge.'
+            },
+            // Unit III: Research Problem, Research Question, Theoretical and Conceptual Framework (LH 5) - 6 Qs
+            {
+                type: 'mcq',
+                unit: 3,
+                chapterName: 'Research Problem, Research Question, Theoretical and Conceptual Framework',
+                question: 'Which characteristic of a good research problem ensures it can be investigated within available resources and time constraints (page 95)?',
+                options: [
+                    'Clarity and Precision',
+                    'Relevance',
+                    'Novelty',
+                    'Feasibility'
+                ],
+                correctIndex: 3,
+                explanation: 'Page 95 defines Feasibility as ensuring "The research problem should be feasible within the available resources, time constraints, and ethical considerations."'
+            },
+            {
+                type: 'mcq',
+                unit: 3,
+                chapterName: 'Research Problem, Research Question, Theoretical and Conceptual Framework',
+                question: 'What does the "M" in the SMART criteria for good research objectives stand for (page 107)?',
+                options: [
+                    'Methodological',
+                    'Measurable',
+                    'Meaningful',
+                    'Motivational'
+                ],
+                correctIndex: 1,
+                explanation: 'Page 107 lists the characteristics of good research objectives (SMART): Specific, Measurable, Achievable, Relevant, Time-bound. Therefore, "M" stands for Measurable.'
+            },
+            {
+                type: 'mcq',
+                unit: 3,
+                chapterName: 'Research Problem, Research Question, Theoretical and Conceptual Framework',
+                question: 'What is the primary difference between a theoretical framework and a conceptual framework (pages 110, 112)?',
+                options: [
+                    'A theoretical framework uses variables, while a conceptual framework uses concepts.',
+                    'A conceptual framework is based on established theory, while a theoretical framework is developed for the specific study.',
+                    'A theoretical framework is broader and based on established theory, while a conceptual framework visualizes relationships between specific variables/concepts for the study.',
+                    'A conceptual framework guides hypothesis development, while a theoretical framework guides data analysis.'
+                ],
+                correctIndex: 2,
+                explanation: 'Page 110 defines a theoretical framework as based on established concepts/propositions forming a systematic view. Page 112 defines a conceptual framework as an analytical tool visualizing relationships for the specific study, often derived from or integrating parts of theoretical frameworks. Thus, the theoretical is broader/established, while the conceptual is study-specific visualization.'
+            },
+            {
+                type: 'mcq',
+                unit: 3,
+                chapterName: 'Research Problem, Research Question, Theoretical and Conceptual Framework',
+                question: 'The process of reasoning that moves from specific observations to broader generalizations or theories is called (page 117):',
+                options: [
+                    'Deduction',
+                    'Induction',
+                    'Hypothesis Testing',
+                    'Abduction'
+                ],
+                correctIndex: 1,
+                explanation: 'Page 117 defines Induction as "deriving general principles or theories from specific observations or cases." Deduction (page 116) moves from general to specific.'
+            },
+            {
+                type: 'mcq',
+                unit: 3,
+                chapterName: 'Research Problem, Research Question, Theoretical and Conceptual Framework',
+                question: 'Which type of hypothesis predicts the existence of an effect or relationship, but not its direction (e.g., positive or negative)? (page 122)',
+                options: [
+                    'Null Hypothesis (H0)',
+                    'Alternative Hypothesis (H1)',
+                    'Directional Hypothesis',
+                    'Non-Directional Hypothesis'
+                ],
+                correctIndex: 3,
+                explanation: 'Page 122 defines a Non-Directional Hypothesis as predicting "the existence of an effect without specifying its direction." A Directional Hypothesis predicts the direction.'
+            },
+            {
+                type: 'critical_thinking',
+                unit: 3,
+                chapterName: 'Research Problem, Research Question, Theoretical and Conceptual Framework',
+                question: 'Using the example research question from page 108 ("What are the factors influencing employee job satisfaction in the IT industry?"), explain how a researcher might use both literature review (Unit II) and potentially personal experience (page 97) to arrive at this question and then formulate a specific, testable hypothesis (e.g., Null and Alternative).',
+                explanation: 'Guidance: Start with the broad area (employee satisfaction in IT). Literature review (Unit II) would identify known factors (salary, work-life balance, management style, career growth), theoretical models (e.g., Herzberg\'s Two-Factor Theory), and potential gaps (e.g., impact of remote work specific to IT in Nepal). Personal experience (observing colleagues, working in IT) might highlight specific concerns (e.g., project pressure). This leads to the focused question. A hypothesis could then be formulated, e.g., H0: There is no relationship between perceived work-life balance and job satisfaction among IT professionals in Nepal. H1: There is a positive relationship between perceived work-life balance and job satisfaction among IT professionals in Nepal (Directional Alternative).'
+            },
+            // Unit IV: Research Design (LH 5) - 5 Qs
+            {
+                type: 'mcq',
+                unit: 4,
+                chapterName: 'Research Design',
+                question: 'What is the primary function of a research design (page 128)?',
+                options: [
+                    'To list all possible variables in a field.',
+                    'To provide a detailed history of the research topic.',
+                    'To guide the researcher in making decisions about the study’s structure, data collection, and analysis.',
+                    'To guarantee funding for the research project.'
+                ],
+                correctIndex: 2,
+                explanation: 'Page 128 defines the function of research design as guiding "the researcher in making decision about the study’s design, data collection, and analysis."'
+            },
+            {
+                type: 'mcq',
+                unit: 4,
+                chapterName: 'Research Design',
+                question: 'Which research design aims primarily to explore new ideas or gain insights into a poorly understood topic (page 129 & 137)?',
+                options: [
+                    'Descriptive Research',
+                    'Explanatory Research',
+                    'Exploratory Research',
+                    'Experimental Research'
+                ],
+                correctIndex: 2,
+                explanation: 'Pages 129 and 137 both define Exploratory Research as aiming "to explore new ideas or gain insights into a topic" or "a poorly understood problem."'
+            },
+            {
+                type: 'mcq',
+                unit: 4,
+                chapterName: 'Research Design',
+                question: 'A study that collects data from the same subjects over an extended period to observe changes or trends uses which design (page 131 & 140)?',
+                options: [
+                    'Cross-Sectional Design',
+                    'Case Study Design',
+                    'Longitudinal Design',
+                    'Experimental Design'
+                ],
+                correctIndex: 2,
+                explanation: 'Pages 131 and 140 define a Longitudinal Study/Design as collecting data "from the same subjects over an extended period to observe changes" or trends.'
+            },
+            {
+                type: 'mcq',
+                unit: 4,
+                chapterName: 'Research Design',
+                question: 'Which IT research design involves manipulating variables to establish cause-and-effect relationships and typically includes a control group and randomization (page 142)?',
+                options: [
+                    'Survey Research Design',
+                    'Case Study Research Design',
+                    'Ethnographic Research Design',
+                    'Experimental Research Design'
+                ],
+                correctIndex: 3,
+                explanation: 'Page 142 defines Experimental Research Design in IT as involving "the manipulation of variables to establish cause-and-effect relationships" and lists Control Group and Randomization as key features.'
+            },
+            {
+                type: 'critical_thinking',
+                unit: 4,
+                chapterName: 'Research Design',
+                question: 'Consider the research question: "How does user interface design (simple vs. complex) affect user satisfaction with a mobile banking app among different age groups (young adults vs. seniors)?" Based on Unit IV, propose an appropriate research design, justifying your choice and briefly mentioning key components like research strategy and data collection methods.',
+                explanation: 'Guidance: A good choice would be an Experimental or Quasi-Experimental Design. Justification: The question asks about cause-and-effect (interface design -> satisfaction) and involves comparing groups (age). Strategy: Likely Quantitative (measuring satisfaction). Method: Could involve creating two versions of the app (simple/complex - manipulation), recruiting users from both age groups, randomly assigning them (if experimental) or using existing groups (if quasi-experimental) to use one version, and then measuring satisfaction via a Survey (e.g., Likert scale questions). Components to mention: Experimental/Quasi-experimental type, Quantitative strategy, Survey/Experiment data collection, Sampling (mentioning age groups).'
+            },
+            // Unit V: Measurement, Scaling and Sampling (LH 9) - 10 Qs
+            {
+                type: 'mcq',
+                unit: 5,
+                chapterName: 'Measurement, Scaling and Sampling',
+                question: 'Which measurement scale involves categories with a meaningful order, but the intervals between values are not necessarily equal (page 149)?',
+                options: [
+                    'Nominal Scale',
+                    'Ordinal Scale',
+                    'Interval Scale',
+                    'Ratio Scale'
+                ],
+                correctIndex: 1,
+                explanation: 'Page 149 describes the Ordinal scale as having labels assigned in a proper order, satisfying the \'Magnitude/Order\' property, but the difference between variables is not indicated (implying unequal intervals). Examples include ranks or satisfaction levels (Very Happy, Happy, Neutral).'
+            },
+            {
+                type: 'mcq',
+                unit: 5,
+                chapterName: 'Measurement, Scaling and Sampling',
+                question: 'A temperature scale like Celsius, where zero does not represent the absolute absence of temperature and ratios are not meaningful (e.g., 20°C is not twice as hot as 10°C), is an example of which scale (page 150)?',
+                options: [
+                    'Nominal Scale',
+                    'Ordinal Scale',
+                    'Interval Scale',
+                    'Ratio Scale'
+                ],
+                correctIndex: 2,
+                explanation: 'Page 150 defines the Interval scale as having order and equal differences, but not a true zero, allowing negative values. It explicitly uses the Celsius temperature scale as an example where ratios are not meaningful.'
+            },
+            {
+                type: 'mcq',
+                unit: 5,
+                chapterName: 'Measurement, Scaling and Sampling',
+                question: 'Which characteristic of good measurement refers to how consistently a method measures something (page 152)?',
+                options: [
+                    'Validity',
+                    'Reliability',
+                    'Practicability',
+                    'Objectivity'
+                ],
+                correctIndex: 1,
+                explanation: 'Page 152 defines Reliability as "how consistently a method measures something. If the same result can be consistently achieved by using the same methods under the same circumstances, the measurement is considered reliable."'
+            },
+            {
+                type: 'mcq',
+                unit: 5,
+                chapterName: 'Measurement, Scaling and Sampling',
+                question: 'The test-retest method and split-half method are techniques used to assess what (page 152)?',
+                options: [
+                    'Content Validity',
+                    'Construct Validity',
+                    'Sampling Error',
+                    'Reliability'
+                ],
+                correctIndex: 3,
+                explanation: 'Page 152 lists Test-retest method, Alternative/parallel form method, Split half method, and Rational-equivalence method under the heading "Test of reliability."'
+            },
+            {
+                type: 'mcq',
+                unit: 5,
+                chapterName: 'Measurement, Scaling and Sampling',
+                question: 'Which type of validity ensures that the measuring instrument includes an adequate and representative set of items to tap the concept being researched (page 153)?',
+                options: [
+                    'Content Validity',
+                    'Criterion-Related Validity',
+                    'Construct Validity',
+                    'Face Validity'
+                ],
+                correctIndex: 0,
+                explanation: 'Page 153 defines Content Validity (also known as face validity) as referring "to the adequate coverage of the concept" and ensuring the tool includes "an adequate and representative set of items that would tap the concept."'
+            },
+            {
+                type: 'mcq',
+                unit: 5,
+                chapterName: 'Measurement, Scaling and Sampling',
+                question: 'What is the key difference between probability and non-probability sampling (syllabus 5.4)?',
+                options: [
+                    'Probability sampling is faster, while non-probability sampling is more accurate.',
+                    'Non-probability sampling ensures every member has a known chance of selection, while probability sampling does not.',
+                    'Probability sampling ensures every member has a known, non-zero chance of selection, while non-probability sampling does not.',
+                    'Non-probability sampling is only used for qualitative research, while probability sampling is only for quantitative.'
+                ],
+                correctIndex: 2,
+                explanation: 'The core principle of probability sampling is that every element in the population has a known, non-zero probability of being included in the sample, allowing for statistical inference. Non-probability sampling methods (like convenience or judgment) do not offer this assurance.'
+            },
+            {
+                type: 'mcq',
+                unit: 5,
+                chapterName: 'Measurement, Scaling and Sampling',
+                question: 'A Likert scale, commonly used in attitude measurement, is an example of which type of scaling technique (page 157)?',
+                options: [
+                    'Ranking Scale',
+                    'Graphic Rating Scale',
+                    'Summated Rating Scale',
+                    'Arbitrary Scale'
+                ],
+                correctIndex: 2,
+                explanation: 'Page 157 explicitly states, "Summated rating scales that are most frequently employed are Likert scales. Summated scale is another name for the summated rating system."'
+            },
+            {
+                type: 'mcq',
+                unit: 5,
+                chapterName: 'Measurement, Scaling and Sampling',
+                question: 'Selecting participants based on their easy availability or accessibility to the researcher is known as:',
+                options: [
+                    'Random Sampling',
+                    'Stratified Sampling',
+                    'Convenience Sampling',
+                    'Systematic Sampling'
+                ],
+                correctIndex: 2,
+                explanation: 'Page 131 defines Convenience Sampling as selecting "participants based on their availability or accessibility."' // Note: This definition appears in Unit IV component list but relates to sampling concept from Unit V
+            },
+            {
+                type: 'critical_thinking',
+                unit: 5,
+                chapterName: 'Measurement, Scaling and Sampling',
+                question: 'Page 154 discusses the relationship between reliability and validity. Explain this relationship using an analogy (e.g., hitting a target with arrows). Can a measurement be reliable but not valid? Can it be valid but not reliable? Why?',
+                explanation: 'Guidance: Analogy: Reliability is consistency (arrows hitting the same spot), Validity is accuracy (arrows hitting the bullseye). 1. Reliable but not Valid: Arrows consistently hit the top-left corner (consistent but inaccurate). A scale consistently measures head circumference to assess intelligence (reliable measurement, but not a valid measure of intelligence). Yes, possible. 2. Valid but not Reliable: Arrows are scattered all around the bullseye (average position is accurate, but inconsistent). A scale gives wildly different intelligence scores each time for the same person (cannot be accurately measuring intelligence if inconsistent). No, not possible. A valid measure MUST be reliable; consistency is a prerequisite for accuracy.'
+            },
+            {
+                type: 'critical_thinking',
+                unit: 5,
+                chapterName: 'Measurement, Scaling and Sampling',
+                question: 'A researcher wants to study the IT skills of recent BCT graduates across all universities in Nepal. Discuss the challenges of using simple random sampling and propose a more feasible probability sampling method, explaining why it might be better (consider syllabus 5.4).',
+                explanation: 'Guidance: Challenges of Simple Random Sampling (SRS): Need a complete list (sampling frame) of ALL recent BCT graduates from ALL universities in Nepal, which is likely difficult/impossible to obtain accurately. Even with a list, contacting randomly selected individuals across the country could be logistically complex and expensive. Proposed Method: Stratified Random Sampling or Cluster Sampling. Stratified: Divide population into strata (universities or regions), then randomly sample from each stratum. Ensures representation from different universities. Better if skill levels might vary by university. Cluster: Divide population into clusters (e.g., universities or districts), randomly select some clusters, then sample all or randomly sample individuals within selected clusters. More feasible if a full list is unavailable but lists within clusters (universities) are. Might be less statistically efficient than stratified if clusters are very different.'
+            },
+            // Unit VI: Data Collection and Analysis (LH 9) - 10 Qs
+            {
+                type: 'mcq',
+                unit: 6,
+                chapterName: 'Data Collection and Analysis',
+                question: 'Data collected firsthand by the researcher specifically for the current research purpose is known as (page 162):',
+                options: [
+                    'Secondary Data',
+                    'Qualitative Data',
+                    'Quantitative Data',
+                    'Primary Data'
+                ],
+                correctIndex: 3,
+                explanation: 'Page 162 defines Primary Data as "Data collected firsthand by the researcher for a specific research purpose."'
+            },
+            {
+                type: 'mcq',
+                unit: 6,
+                chapterName: 'Data Collection and Analysis',
+                question: 'Which principle of questionnaire design emphasizes avoiding questions that ask about two or more concepts in a single question (page 171)?',
+                options: [
+                    'Clarity',
+                    'Relevance',
+                    'Avoiding Double-Barreled Questions',
+                    'Unbiased Language'
+                ],
+                correctIndex: 2,
+                explanation: 'Page 171 explicitly addresses "Avoiding Double-Barreled Questions," stating the principle that "Each question should address a single concept or issue, avoiding multiple inquiries in one."'
+            },
+            {
+                type: 'mcq',
+                unit: 6,
+                chapterName: 'Data Collection and Analysis',
+                question: 'Group discussions led by a facilitator to explore shared perspectives are a method of obtaining which type of data (page 181)?',
+                options: [
+                    'Quantitative Experimental Data',
+                    'Secondary Statistical Data',
+                    'Qualitative Data via Focus Groups',
+                    'Primary Survey Data (Closed-Ended)'
+                ],
+                correctIndex: 2,
+                explanation: 'Page 181 describes Focus Groups as "Group discussions among participants led by a facilitator to explore shared perspectives," listed as a source of Qualitative Data.'
+            },
+            {
+                type: 'mcq',
+                unit: 6,
+                chapterName: 'Data Collection and Analysis',
+                question: 'According to page 235, the step in qualitative data analysis that involves classifying data into different classes and potentially removing non-related data is called:',
+                options: [
+                    'Data Display',
+                    'Drawing Conclusions',
+                    'Data Reduction',
+                    'Thematic Analysis'
+                ],
+                correctIndex: 2,
+                explanation: 'Page 235 describes "Data reduction" as the first step, involving classifying data, integrating inter-related data, and removing non-related data to reduce the volume.'
+            },
+            {
+                type: 'mcq',
+                unit: 6,
+                chapterName: 'Data Collection and Analysis',
+                question: 'Which statistical method is used to compare the means of three or more groups simultaneously (page 243)?',
+                options: [
+                    'T-test',
+                    'Chi-square test',
+                    'Correlation',
+                    'ANOVA (Analysis of Variance)'
+                ],
+                correctIndex: 3,
+                explanation: 'Page 243 defines ANOVA as "a statistical method used to compare the means of three or more groups to determine if there is a statistically significant difference among them."'
+            },
+            {
+                type: 'mcq',
+                unit: 6,
+                chapterName: 'Data Collection and Analysis',
+                question: 'What is a key assumption for using ANOVA regarding the variances within the groups being compared (page 243)?',
+                options: [
+                    'Variances must be significantly different.',
+                    'Variances should be roughly equal (homoscedasticity).',
+                    'Data must be non-normally distributed.',
+                    'The dependent variable must be nominal.'
+                ],
+                correctIndex: 1,
+                explanation: 'Page 243 lists "Homogeneity of Variances" as an assumption, stating "The variance (spread) of data in all groups should be roughly equal. This is called homoscedasticity."'
+            },
+            {
+                type: 'mcq',
+                unit: 6,
+                chapterName: 'Data Collection and Analysis',
+                question: 'The Chi-square test for independence is used to determine if there is an association between (page 246):',
+                options: [
+                    'Two continuous variables.',
+                    'The means of two groups.',
+                    'Two categorical variables.',
+                    'A categorical variable and a continuous variable.'
+                ],
+                correctIndex: 2,
+                explanation: 'Page 246 states the Chi-Square Test for Independence is used "to determine whether two categorical variables are associated or independent of each other."'
+            },
+            {
+                 type: 'mcq',
+                 unit: 6,
+                 chapterName: 'Data Collection and Analysis',
+                 question: 'What type of analysis focuses on identifying, analyzing, and reporting patterns (themes) within qualitative data (page 241)?',
+                 options: [
+                     'Content Analysis',
+                     'Narrative Analysis',
+                     'Thematic Analysis',
+                     'Statistical Analysis'
+                 ],
+                 correctIndex: 2,
+                 explanation: 'Page 241 defines Thematic Analysis as "A technique of qualitative data analysis that is used to identify the major points of data, analyze them and prepare report... searching theme of the data... that is important for the description of the phenomena."'
+             },
+            {
+                type: 'critical_thinking',
+                unit: 6,
+                chapterName: 'Data Collection and Analysis',
+                question: 'A researcher prepares a questionnaire to measure employee motivation. It includes questions like "Are you satisfied with your salary and do you feel your work is meaningful?" Identify the design flaw based on page 171 and explain why it is problematic for data collection and analysis.',
+                explanation: 'Guidance: The flaw is that this is a Double-Barreled Question (page 171). It asks about two distinct concepts (salary satisfaction AND work meaningfulness) in one question. Problem: A respondent might be satisfied with their salary but not find the work meaningful, or vice versa. A single yes/no or agreement rating cannot accurately capture their distinct feelings on both aspects. This leads to ambiguous data that is difficult to interpret and analyze correctly. Each concept should be addressed in separate questions.'
+            },
+            {
+                type: 'critical_thinking',
+                unit: 6,
+                chapterName: 'Data Collection and Analysis',
+                question: 'Contrast primary and secondary data (pages 162-164). If you were researching the historical trends of internet penetration in rural Nepal over the last 20 years, would you primarily use primary or secondary data? Justify your choice, mentioning potential sources and challenges.',
+                explanation: 'Guidance: Primary data is collected firsthand for the specific study (e.g., surveys, interviews); Secondary data already exists, collected for other purposes (e.g., reports, databases). For historical trends over 20 years, secondary data would be primary. Justification: Collecting primary data (e.g., surveying people about their internet use 20 years ago) would be highly unreliable due to recall bias and infeasible for historical points. Secondary data is the only practical option. Sources: Nepal Telecommunications Authority (NTA) reports, Ministry of Communication and Information Technology (MoCIT) data, World Bank / ITU databases, academic studies, potentially old census data. Challenges: Data availability/consistency over 20 years, changes in definitions/measurement methods over time, potential biases in original data collection, accessibility of older reports.'
+            },
+            // Unit VII: Research Proposal and Scientific Writing (LH 5) - 5 Qs
+            {
+                type: 'mcq',
+                unit: 7,
+                chapterName: 'Research Proposal and Scientific Writing',
+                question: 'According to page 191, what is a key purpose of a research title?',
+                options: [
+                    'To list all the authors involved.',
+                    'To be as long and detailed as possible.',
+                    'To encapsulate the essence of the research and spark interest.',
+                    'To include the full abstract.'
+                ],
+                correctIndex: 2,
+                explanation: 'Page 191 states the research title "encapsulates the essence of the research and sparks interest." It also conveys focus, scope, and relevance.'
+            },
+            {
+                type: 'mcq',
+                unit: 7,
+                chapterName: 'Research Proposal and Scientific Writing',
+                question: 'Which component of a research proposal outlines the plan for the study, including research design, sampling strategy, and data collection methods (page 206)?',
+                options: [
+                    'Introduction',
+                    'Literature Review',
+                    'Research Methodology',
+                    'Budget'
+                ],
+                correctIndex: 2,
+                explanation: 'Page 206 identifies "Research methodology" as the section that "Describes the approach, methods, and techniques used in the study," including "Research design, sampling strategy, data collection, and analysis methods."'
+            },
+            {
+                type: 'mcq',
+                unit: 7,
+                chapterName: 'Research Proposal and Scientific Writing',
+                question: 'Solicited proposals, often used in grant applications, are defined as (page 202):',
+                options: [
+                    'Proposals submitted without a specific invitation.',
+                    'Proposals seeking to extend existing research projects.',
+                    'Proposals invited in response to a specific call or request.',
+                    'Internal proposals within an organization.'
+                ],
+                correctIndex: 2,
+                explanation: 'Page 202 defines Solicited proposals as "Invited proposals in response to a specific call or request."'
+            },
+            {
+                type: 'mcq',
+                unit: 7,
+                chapterName: 'Research Proposal and Scientific Writing',
+                question: 'What is the primary purpose of citations in academic writing (page 227)?',
+                options: [
+                    'To make the paper look more scholarly.',
+                    'To increase the word count.',
+                    'To acknowledge original sources and allow readers to locate them.',
+                    'To summarize the main points of the cited work.'
+                ],
+                correctIndex: 2,
+                explanation: 'Page 227 lists the purposes of citations as: "Acknowledge and give credit to the original sources..." and "Provide a roadmap for readers to locate the sources..."'
+             },
+            {
+                type: 'critical_thinking',
+                unit: 7,
+                chapterName: 'Research Proposal and Scientific Writing',
+                question: 'Based on the characteristics of a good research proposal (pages 211-217), evaluate the importance of the "Literature Review" section (page 205). How does a strong literature review contribute to making a proposal "Grounded in literature," "Relevant to the field," and justifying the "Research need"?',
+                explanation: 'Guidance: A strong literature review is crucial. 1. Grounded in Literature: It explicitly demonstrates the researcher\'s understanding of existing work, theories, and methods (page 213), showing the proposal isn\'t created in a vacuum. 2. Relevance: By summarizing key findings and identifying gaps/controversies (page 205), it shows how the proposed research addresses a significant, current issue within the field (page 212). 3. Justifying Need: The identification of gaps or unresolved questions provides the core justification for why the proposed study is necessary and valuable (page 213); it highlights the contribution the research aims to make.'
+            }
+        ];
+
+        const quizContainer = document.getElementById('quiz-container');
+        const questionArea = document.getElementById('question-area');
+        const questionContext = document.getElementById('question-context'); // Added
+        const questionText = document.getElementById('question-text');
+        const mcqOptionsContainer = document.getElementById('mcq-options');
+        const criticalThinkingArea = document.getElementById('critical-thinking-area');
+        const criticalThinkingAnswer = document.getElementById('critical-thinking-answer');
+        const feedbackArea = document.getElementById('feedback-area');
+        const submitButton = document.getElementById('submit-button');
+        const proceedButton = document.getElementById('proceed-button');
+        const nextButton = document.getElementById('next-button');
+        const scoreArea = document.getElementById('score-area');
+        const resultsArea = document.getElementById('results-area');
+        const finalScoreDisplay = document.getElementById('final-score');
+        const restartButton = document.getElementById('restart-button');
+        const startButton = document.getElementById('start-button');
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let mcqTotal = 0;
+        let shuffledQuestions = [];
+        let guidanceShown = false; // For critical thinking state
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function startQuiz() {
+            shuffledQuestions = shuffleArray([...quizData]);
+            currentQuestionIndex = 0;
+            score = 0;
+            mcqTotal = shuffledQuestions.filter(q => q.type === 'mcq').length;
+            startButton.style.display = 'none';
+            resultsArea.style.display = 'none';
+            questionArea.style.display = 'block';
+            updateScoreDisplay();
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            guidanceShown = false; // Reset guidance state
+            const currentQuestion = shuffledQuestions[currentQuestionIndex];
+
+            // --- MODIFICATION START ---
+            // Combine question text with unit/chapter info
+            const questionContextInfo = ` (Unit ${currentQuestion.unit}: ${currentQuestion.chapterName})`;
+            questionText.textContent = `Q${currentQuestionIndex + 1}: ${currentQuestion.question}${questionContextInfo}`;
+            // --- MODIFICATION END ---
+
+            // Clear previous state
+            mcqOptionsContainer.innerHTML = '';
+            mcqOptionsContainer.style.display = 'none';
+            criticalThinkingArea.style.display = 'none';
+            // Remove the line that populated the old context div:
+            // questionContext.textContent = ''; // REMOVE OR COMMENT OUT THIS LINE
+            feedbackArea.style.display = 'none';
+            feedbackArea.className = 'feedback-area'; // Reset class
+            submitButton.style.display = 'none';
+             proceedButton.style.display = 'none';
+            nextButton.style.display = 'none';
+
+            if (currentQuestion.type === 'mcq') {
+                mcqOptionsContainer.style.display = 'block';
+                submitButton.style.display = 'block';
+                submitButton.disabled = true; // Disable until an option is selected
+
+                currentQuestion.options.forEach((option, index) => {
+                    const label = document.createElement('label');
+                    const radio = document.createElement('input');
+                    radio.type = 'radio';
+                    radio.name = 'option';
+                    radio.value = index;
+                    radio.id = `option${index}`;
+                    radio.addEventListener('change', () => {
+                        submitButton.disabled = false;
+                    });
+
+                    const span = document.createElement('span');
+                    span.textContent = option;
+
+                    label.appendChild(radio);
+                    label.appendChild(span);
+                    mcqOptionsContainer.appendChild(label);
+                });
+
+            } else if (currentQuestion.type === 'critical_thinking') {
+                criticalThinkingArea.style.display = 'block';
+                criticalThinkingAnswer.value = ''; // Clear previous reflection
+                proceedButton.style.display = 'block';
+                proceedButton.textContent = 'Proceed / Show Guidance'; // Reset button text
+            }
+             updateScoreDisplay(); // Update score display for each question
+        }
+
+        function submitMCQAnswer() {
+            const selectedOption = document.querySelector('input[name="option"]:checked');
+            if (!selectedOption) return;
+
+            const answerIndex = parseInt(selectedOption.value);
+            const currentQuestion = shuffledQuestions[currentQuestionIndex];
+            const isCorrect = answerIndex === currentQuestion.correctIndex;
+
+            // Disable options
+            const allRadios = document.querySelectorAll('input[name="option"]');
+            const allLabels = mcqOptionsContainer.querySelectorAll('label');
+            allRadios.forEach(radio => radio.disabled = true);
+             allLabels.forEach(label => label.classList.add('disabled')); // Add disabled class for styling
+
+            feedbackArea.style.display = 'block';
+            feedbackArea.innerHTML = ''; // Clear previous feedback
+
+            const feedbackText = document.createElement('p');
+            const explanationText = document.createElement('div');
+            explanationText.classList.add('explanation');
+            explanationText.innerHTML = `<b>Explanation:</b> ${currentQuestion.explanation}`; // Use innerHTML for potential formatting
+
+            if (isCorrect) {
+                score++;
+                feedbackText.textContent = 'Correct!';
+                feedbackArea.className = 'feedback-area feedback-correct';
+                // Highlight correct answer
+                 selectedOption.parentElement.classList.add('highlight-correct');
+            } else {
+                feedbackText.textContent = 'Incorrect.';
+                feedbackArea.className = 'feedback-area feedback-incorrect';
+                // Highlight incorrect selection and correct answer
+                selectedOption.parentElement.classList.add('highlight-incorrect');
+                 if (document.getElementById(`option${currentQuestion.correctIndex}`)) {
+                     document.getElementById(`option${currentQuestion.correctIndex}`).parentElement.classList.add('highlight-correct');
+                 }
+            }
+
+            feedbackArea.appendChild(feedbackText);
+            feedbackArea.appendChild(explanationText);
+
+            submitButton.style.display = 'none';
+            nextButton.style.display = 'block';
+
+            if (currentQuestionIndex === shuffledQuestions.length - 1) {
+                nextButton.textContent = 'Show Results';
+            } else {
+                nextButton.textContent = 'Next Question';
+            }
+            updateScoreDisplay();
+        }
+
+        function handleProceedClick() {
+            const currentQuestion = shuffledQuestions[currentQuestionIndex];
+
+            if (!guidanceShown) {
+                // First click: Show guidance
+                feedbackArea.style.display = 'block';
+                feedbackArea.innerHTML = ''; // Clear previous
+                feedbackArea.className = 'feedback-area feedback-guidance'; // Set guidance style
+                const explanationText = document.createElement('div');
+                explanationText.classList.add('explanation');
+                explanationText.innerHTML = `<b>Guidance:</b> ${currentQuestion.explanation}`; // Use innerHTML
+                feedbackArea.appendChild(explanationText);
+
+                proceedButton.textContent = (currentQuestionIndex === shuffledQuestions.length - 1) ? 'Show Results' : 'Next Question';
+                guidanceShown = true;
+            } else {
+                // Second click: Proceed to next question or results
+                proceedToNext();
+            }
+        }
+
+
+        function proceedToNext() {
+             currentQuestionIndex++;
+            if (currentQuestionIndex < shuffledQuestions.length) {
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function updateScoreDisplay() {
+            // Count actual MCQs encountered so far
+            let mcqsEncountered = 0;
+            for(let i = 0; i <= currentQuestionIndex && i < shuffledQuestions.length; i++) {
+                if (shuffledQuestions[i].type === 'mcq') {
+                    mcqsEncountered++;
+                }
+            }
+             // Only display score out of MCQs attempted or total MCQs
+             const currentTotal = Math.min(mcqsEncountered, mcqTotal);
+             scoreArea.textContent = `MC Score: ${score} / ${currentTotal}`;
+
+
+        }
+
+         function showResults() {
+            questionArea.style.display = 'none';
+            resultsArea.style.display = 'block';
+            const percentage = mcqTotal > 0 ? ((score / mcqTotal) * 100).toFixed(1) : 0;
+            finalScoreDisplay.textContent = `Your final MCQ score is: ${score} / ${mcqTotal} (${percentage}%)`;
+        }
+
+        // Event Listeners
+        startButton.addEventListener('click', startQuiz);
+        submitButton.addEventListener('click', submitMCQAnswer);
+        proceedButton.addEventListener('click', handleProceedClick);
+        nextButton.addEventListener('click', proceedToNext);
+        restartButton.addEventListener('click', startQuiz);
+
+    </script>
+
+    </body>
+</html>
