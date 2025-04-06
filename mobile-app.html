@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CIT 317: Mobile App Development Quiz</title>
-    <style>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Mobile App Development Quiz</title>
+        <style>
         body {
             font-family: sans-serif;
             line-height: 1.6;
@@ -37,8 +37,12 @@
             font-size: 1.2em;
             font-weight: bold;
             margin-bottom: 15px;
+             /* Ensure long questions wrap */
+             white-space: pre-wrap; /* Allows wrapping */
+             word-wrap: break-word; /* Breaks long words if needed */
         }
 
+        /* Styles for Multiple Choice */
         .option {
             display: block;
             margin-bottom: 12px;
@@ -51,72 +55,18 @@
         .option:hover {
              background-color: #dcd6f7; /* Slightly darker purple on hover */
         }
-
-
         .option input[type="radio"] {
             margin-right: 10px;
             display: none; /* Hide radio button visually */
         }
-
         .option label {
             cursor: pointer;
             display: block; /* Make label fill the option div */
             width: 100%;
         }
-
-         /* Style for selected option before submission */
-        .option input[type="radio"]:checked + label {
-            font-weight: bold;
-        }
         .option.selected { /* Add class via JS on selection */
             background-color: #c1bbf0;
         }
-
-
-        #submit-btn, #next-btn, #restart-btn {
-            display: block;
-            width: auto;
-            padding: 12px 25px;
-            background-color: #5a4fcf; /* Purple button */
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 1em;
-            margin: 20px auto 0; /* Center button */
-            transition: background-color 0.3s ease;
-        }
-
-        #submit-btn:hover, #next-btn:hover, #restart-btn:hover {
-            background-color: #413a9a; /* Darker purple on hover */
-        }
-        #submit-btn:disabled {
-             background-color: #cccccc;
-             cursor: not-allowed;
-        }
-
-
-        #feedback-area {
-            margin-top: 15px;
-            padding: 15px;
-            border-radius: 5px;
-            font-weight: bold;
-            text-align: center;
-        }
-
-        .correct-feedback {
-            background-color: #d4edda; /* Greenish */
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-
-        .incorrect-feedback {
-            background-color: #f8d7da; /* Reddish */
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-
-        /* Styles for options after submission */
         .option.correct {
             background-color: #a3d9a5 !important; /* Force green */
             border: 2px solid #155724;
@@ -133,7 +83,68 @@
             background-color: #f0f0f0;
         }
 
+        /* Styles for Critical Thinking */
+        #critical-thinking-answer {
+             display: block;
+             width: 95%; /* Slightly less than 100% for padding */
+             min-height: 150px;
+             margin-top: 15px;
+             padding: 10px;
+             border: 1px solid #ccc;
+             border-radius: 5px;
+             font-family: sans-serif;
+             font-size: 1em;
+             resize: vertical; /* Allow vertical resizing */
+        }
+         #critical-thinking-prompt {
+            font-style: italic;
+            color: #666;
+            margin-top: 10px;
+            font-size: 0.9em;
+         }
 
+        /* Buttons */
+        #submit-btn, #next-btn, #restart-btn {
+            display: block;
+            width: auto;
+            padding: 12px 25px;
+            background-color: #5a4fcf; /* Purple button */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            margin: 20px auto 0; /* Center button */
+            transition: background-color 0.3s ease;
+        }
+        #submit-btn:hover, #next-btn:hover, #restart-btn:hover {
+            background-color: #413a9a; /* Darker purple on hover */
+        }
+        #submit-btn:disabled {
+             background-color: #cccccc;
+             cursor: not-allowed;
+        }
+
+        /* Feedback Area (for MC only) */
+        #feedback-area {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 5px;
+            font-weight: bold;
+            text-align: center;
+        }
+        .correct-feedback {
+            background-color: #d4edda; /* Greenish */
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .incorrect-feedback {
+            background-color: #f8d7da; /* Reddish */
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        /* Score Area */
         #score-area {
             text-align: right;
             font-weight: bold;
@@ -142,6 +153,7 @@
             color: #413a9a;
         }
 
+        /* Results Area */
         #results-area {
             text-align: center;
             margin-top: 30px;
@@ -152,42 +164,59 @@
          #results-area h2 {
             color: #413a9a;
          }
+         #results-info {
+             font-size: 0.9em;
+             color: #555;
+             margin-top: 15px;
+         }
 
         /* Hide elements initially */
-        #next-btn, #feedback-area, #results-area, #restart-btn {
+        #next-btn, #feedback-area, #results-area, #restart-btn, #critical-thinking-answer, #critical-thinking-prompt {
             display: none;
         }
-
     </style>
-</head>
-<body>
+    </head>
+    <body>
 
-    <div id="quiz-container">
-        <h1>CIT 317: Mobile App Development Quiz</h1>
+        <div id="quiz-container">
+            <h1>CIT 317: Mobile App Development Quiz</h1>
 
-        <div id="score-area">Score: <span id="score">0</span> / <span id="total-questions">0</span></div>
+            <div id="score-area">MC Score: <span id="score">0</span> / <span
+                    id="total-mc-questions">0</span></div>
 
-        <div id="question-area">
-            <p id="question-text"></p>
-            <div id="options-container">
-                <!-- Options will be loaded here by JS -->
+            <div id="question-area">
+                <p id="question-text"></p>
+                <div id="options-container">
+                    <!-- MC Options will be loaded here by JS -->
+                </div>
+                <!-- Critical Thinking Input Area -->
+                <p id="critical-thinking-prompt">Consider your response to the
+                    question above. Type your thoughts here (this will not be
+                    graded).</p>
+                <textarea id="critical-thinking-answer"
+                    placeholder="Type your critical analysis here..."></textarea>
+
+                <button id="submit-btn">Submit Answer</button>
+                <div id="feedback-area"></div> <!-- Feedback only for MC -->
+                <button id="next-btn">Next Question</button>
             </div>
-            <button id="submit-btn">Submit Answer</button>
-            <div id="feedback-area"></div>
-            <button id="next-btn">Next Question</button>
+
+            <div id="results-area">
+                <h2>Quiz Completed!</h2>
+                <p id="final-score"></p>
+                <p id="results-info">This score reflects multiple-choice
+                    questions only. Critical thinking questions were included
+                    for reflection.</p>
+                <button id="restart-btn">Restart Quiz</button>
+            </div>
         </div>
 
-        <div id="results-area">
-            <h2>Quiz Completed!</h2>
-            <p id="final-score"></p>
-            <button id="restart-btn">Restart Quiz</button>
-        </div>
-    </div>
-
-    <script>
+        <script>
         const quizData = [
-            // Chapter 1
+             // --- Start Combination ---
+             // Chapter 1 - MCQs (2)
             {
+                type: 'mc',
                 question: "What is the primary difference between Native and Hybrid mobile apps?",
                 options: [
                     "Native apps are built using web technologies (HTML, CSS, JS), while Hybrid apps use platform-specific languages (Swift, Kotlin).",
@@ -198,6 +227,7 @@
                 correctIndex: 2
             },
             {
+                type: 'mc',
                 question: "Which set of technologies is most commonly associated with Web Development, as opposed to native App Development?",
                 options: [
                     "Java, Kotlin, Swift",
@@ -207,8 +237,14 @@
                 ],
                 correctIndex: 1
             },
-             // Chapter 2
+             // Chapter 1 - Critical (1)
             {
+                type: 'critical',
+                question: "Scenario: A small news organization wants to deliver breaking news alerts and read articles offline. Limited budget, web-skilled team, needs iOS & Android presence quickly. Critically evaluate Native, Hybrid, and Web apps. Justify your recommendation and explain the key trade-offs (performance, cost, features, time-to-market)."
+            },
+            // Chapter 2 - MCQs (2)
+            {
+                 type: 'mc',
                 question: "Which factor is LEAST critical when choosing between iOS and Android development platforms initially?",
                 options: [
                     "Target audience demographics and geography",
@@ -219,6 +255,7 @@
                 correctIndex: 3
             },
              {
+                 type: 'mc',
                 question: "What is the first stage in the typical Mobile Application Development Lifecycle?",
                 options: [
                     "Development (Coding)",
@@ -228,8 +265,14 @@
                 ],
                 correctIndex: 3
             },
-            // Chapter 3
+            // Chapter 2 - Critical (1)
+             {
+                type: 'critical',
+                question: "Argue why skipping or significantly rushing the 'Research/Planning' stage often leads to greater costs and delays later in the lifecycle. Provide specific examples of problems that might arise during Development or Testing due to inadequate planning."
+            },
+            // Chapter 3 - MCQs (3)
             {
+                type: 'mc',
                 question: "In the Model-View-Controller (MVC) pattern, what is the primary responsibility of the 'Model' component?",
                 options: [
                     "Displaying the user interface and visual elements.",
@@ -240,6 +283,7 @@
                 correctIndex: 2
             },
             {
+                 type: 'mc',
                  question: "Which data storage option in Android is best suited for storing small amounts of simple key-value data, like user preferences?",
                  options: [
                     "SQLite Database",
@@ -250,6 +294,7 @@
                  correctIndex: 2
             },
             {
+                type: 'mc',
                 question: "What does API stand for in the context of software development?",
                 options: [
                     "Application Programming Interface",
@@ -259,7 +304,14 @@
                 ],
                 correctIndex: 0
             },
+             // Chapter 3 - Critical 1 (Storage Security) (1)
              {
+                type: 'critical',
+                question: "Compare using SharedPreferences/UserDefaults versus EncryptedSharedPreferences/Keychain for storing user authentication tokens locally. Why is using the standard (non-encrypted) approach a significant security risk, especially on rooted/jailbroken devices?"
+             },
+             // Chapter 3 - MCQs (2)
+            {
+                type: 'mc',
                 question: "Which of the following is a major security concern related to 'Insecure Data Storage' in mobile apps?",
                 options: [
                     "Using strong encryption for all network communication.",
@@ -270,6 +322,7 @@
                  correctIndex: 1
              },
               {
+                type: 'mc',
                 question: "What is the purpose of 'Code Signing' a mobile application?",
                 options: [
                     "To compress the application code for smaller download size.",
@@ -279,8 +332,14 @@
                  ],
                  correctIndex: 1
              },
-             // Chapter 4
+            // Chapter 3 - Critical 2 (MVC) (1)
              {
+                type: 'critical',
+                question: "How does strictly adhering to MVC help manage complexity and facilitate collaboration when building a large-scale mobile application with multiple developers? Contrast this with mixing UI logic, data handling, and user input in the same code files."
+             },
+             // Chapter 4 - MCQs (3)
+             {
+                 type: 'mc',
                 question: "Which tool is the official Integrated Development Environment (IDE) for Android development provided by Google?",
                 options: [
                     "Xcode",
@@ -291,6 +350,7 @@
                 correctIndex: 2
             },
             {
+                type: 'mc',
                 question: "In Android development, what are Layouts primarily used for?",
                 options: [
                     "Defining the app's data structure.",
@@ -301,6 +361,7 @@
                 correctIndex: 2
             },
              {
+                type: 'mc',
                 question: "Which technology is commonly used for backend services, real-time databases, and push notifications in Android apps, provided by Google?",
                 options: [
                     "SQLite",
@@ -310,8 +371,14 @@
                  ],
                  correctIndex: 2
              },
-             // Chapter 5
+            // Chapter 4 - Critical (RecyclerView) (1)
             {
+                 type: 'critical',
+                 question: "An Android app displaying a long, scrollable list of network images using LinearLayout inside ScrollView becomes slow and crashes with OutOfMemoryError. Explain why this is inefficient. Recommend a better UI component and explain how it solves these issues."
+             },
+             // Chapter 5 - MCQs (2)
+             {
+                 type: 'mc',
                 question: "What type of testing involves testing individual, small, isolated parts (like functions or methods) of an application's code?",
                 options: [
                     "Integration Testing",
@@ -322,6 +389,7 @@
                 correctIndex: 1
             },
             {
+                type: 'mc',
                 question: "What is the primary purpose of 'Crash Reporting Tools' like Firebase Crashlytics?",
                 options: [
                     "To automate UI testing.",
@@ -331,7 +399,14 @@
                 ],
                 correctIndex: 2
             },
+             // Chapter 5 - Critical (Beta Testing) (1)
             {
+                type: 'critical',
+                question: "A mobile game team conducts thorough Unit and Alpha testing. Argue why Beta Testing with real users is still crucial. What specific feedback or issues are more likely uncovered during Beta Testing?"
+            },
+            // Chapter 6 - MCQs (2)
+             {
+                type: 'mc',
                 question: "Which testing phase involves releasing the app to a limited group of external users (real users) in a real-world environment before the final public release?",
                 options: [
                     "Unit Testing",
@@ -341,8 +416,8 @@
                 ],
                 correctIndex: 2
             },
-            // Chapter 6
             {
+                 type: 'mc',
                 question: "What is an Android App Bundle (.aab)?",
                 options: [
                     "A single, universal APK file that works on all devices.",
@@ -352,7 +427,14 @@
                 ],
                 correctIndex: 2
             },
+             // Chapter 6 - Critical (Guidelines) (1)
+            {
+                type: 'critical',
+                question: "An app update gets rejected for requesting excessive permissions. Explain the importance of app store guidelines regarding user privacy/permissions. What are potential negative consequences for the developer (beyond rejection) if they repeatedly try to circumvent these guidelines?"
+            },
+            // Chapter 7 - MCQs (4)
              {
+                 type: 'mc',
                 question: "Why are App Store Guidelines (like those from Apple App Store or Google Play Store) important for developers?",
                 options: [
                     "They are optional recommendations with no real impact.",
@@ -362,8 +444,8 @@
                  ],
                  correctIndex: 2
              },
-            // Chapter 7
             {
+                 type: 'mc',
                 question: "What is the primary IDE used for developing native iOS applications?",
                 options: [
                     "Android Studio",
@@ -374,7 +456,8 @@
                 correctIndex: 1
             },
             {
-                question: "Which programming language was introduced by Apple as a modern, safe, and powerful language for iOS, macOS, watchOS, and tvOS development, largely replacing Objective-C?",
+                 type: 'mc',
+                question: "Which programming language was introduced by Apple as a modern, safe, and powerful language for iOS, macOS, watchOS, and tvOS development?",
                 options: [
                     "Java",
                     "Kotlin",
@@ -384,6 +467,7 @@
                 correctIndex: 3
             },
             {
+                type: 'mc',
                 question: "What tool within Xcode allows developers to test their iOS apps on simulated iPhone or iPad environments without needing a physical device?",
                 options: [
                     "Instruments",
@@ -392,182 +476,208 @@
                     "Swift Package Manager"
                 ],
                 correctIndex: 2
-            }
+            },
+            // Chapter 7 - Critical (Swift Safety) (1)
+             {
+                type: 'critical',
+                question: "Swift was designed with 'safety' as a key goal. Describe two specific Swift language features that contribute to safer code compared to Objective-C, and explain how they help prevent common runtime crashes or bugs."
+             }
+             // --- End Combination (Total 20 MCQs, 8 Critical) ---
         ];
 
         // DOM Elements
         const questionTextElement = document.getElementById('question-text');
         const optionsContainer = document.getElementById('options-container');
+        const criticalAnswerArea = document.getElementById('critical-thinking-answer');
+        const criticalPrompt = document.getElementById('critical-thinking-prompt');
         const submitButton = document.getElementById('submit-btn');
         const feedbackArea = document.getElementById('feedback-area');
         const nextButton = document.getElementById('next-btn');
         const scoreElement = document.getElementById('score');
-        const totalQuestionsElement = document.getElementById('total-questions');
+        const totalMcQuestionsElement = document.getElementById('total-mc-questions');
         const questionArea = document.getElementById('question-area');
         const resultsArea = document.getElementById('results-area');
         const finalScoreElement = document.getElementById('final-score');
         const restartButton = document.getElementById('restart-btn');
+        const resultsInfoElement = document.getElementById('results-info');
+
 
         // State Variables
         let currentQuestionIndex = 0;
         let score = 0;
         let selectedOptionElement = null; // To track the div of the selected option
+        const totalMcQuestions = quizData.filter(q => q.type === 'mc').length; // Calculate total MC questions
 
         function loadQuestion() {
-            // Reset previous state
+            // Reset common elements
             feedbackArea.style.display = 'none';
             feedbackArea.textContent = '';
-            feedbackArea.className = 'feedback-area'; // Remove correct/incorrect classes
-            optionsContainer.innerHTML = ''; // Clear old options
-            submitButton.style.display = 'block';
-            nextButton.style.display = 'none';
-            submitButton.disabled = true; // Disable until an option is selected
+            feedbackArea.className = 'feedback-area';
+            optionsContainer.innerHTML = '';
+            optionsContainer.style.display = 'none'; // Hide by default
+            criticalAnswerArea.style.display = 'none'; // Hide by default
+            criticalPrompt.style.display = 'none'; // Hide by default
+            criticalAnswerArea.value = ''; // Clear textarea
+            submitButton.style.display = 'none'; // Hide by default
+            nextButton.style.display = 'none'; // Hide by default
+            submitButton.disabled = true;
             selectedOptionElement = null;
 
             if (currentQuestionIndex < quizData.length) {
                 const currentQuestion = quizData[currentQuestionIndex];
+                // Use textContent to prevent potential HTML injection in question text
                 questionTextElement.textContent = `${currentQuestionIndex + 1}. ${currentQuestion.question}`;
 
-                currentQuestion.options.forEach((option, index) => {
-                    const optionDiv = document.createElement('div');
-                    optionDiv.className = 'option';
+                // --- Display based on type ---
+                if (currentQuestion.type === 'mc') {
+                    optionsContainer.style.display = 'block';
+                    submitButton.style.display = 'block'; // Show Submit only for MC
 
-                    const radioInput = document.createElement('input');
-                    radioInput.type = 'radio';
-                    radioInput.name = 'option';
-                    radioInput.value = index; // Use index as value
-                    radioInput.id = `option${index}`;
-                    radioInput.addEventListener('change', () => {
-                        // Enable submit button when an option is selected
-                        submitButton.disabled = false;
-                        // Remove previous selection style
-                         if(selectedOptionElement) {
-                            selectedOptionElement.classList.remove('selected');
-                         }
-                         // Apply style to current selection
-                         selectedOptionElement = optionDiv;
-                         selectedOptionElement.classList.add('selected');
+                    currentQuestion.options.forEach((option, index) => {
+                        const optionDiv = document.createElement('div');
+                        optionDiv.className = 'option';
+
+                        const radioInput = document.createElement('input');
+                        radioInput.type = 'radio';
+                        radioInput.name = 'option';
+                        radioInput.value = index;
+                        radioInput.id = `option${index}`;
+                        radioInput.addEventListener('change', () => {
+                            submitButton.disabled = false;
+                             if(selectedOptionElement) {
+                                selectedOptionElement.classList.remove('selected');
+                             }
+                             selectedOptionElement = optionDiv;
+                             selectedOptionElement.classList.add('selected');
+                        });
+
+                        const label = document.createElement('label');
+                        label.htmlFor = `option${index}`;
+                        // Use textContent for options as well
+                        label.textContent = option;
+
+                        optionDiv.appendChild(radioInput);
+                        optionDiv.appendChild(label);
+                        optionDiv.addEventListener('click', () => {
+                            if (!radioInput.disabled) {
+                                 radioInput.checked = true;
+                                 radioInput.dispatchEvent(new Event('change'));
+                            }
+                        });
+                        optionsContainer.appendChild(optionDiv);
                     });
+                } else if (currentQuestion.type === 'critical') {
+                     criticalAnswerArea.style.display = 'block';
+                     criticalPrompt.style.display = 'block';
+                     nextButton.style.display = 'block'; // Show Next directly for critical
+                     nextButton.textContent = 'Proceed to Next Question'; // Specific text
+                }
 
-                    const label = document.createElement('label');
-                    label.htmlFor = `option${index}`;
-                    label.textContent = option;
+                // Update score display
+                totalMcQuestionsElement.textContent = totalMcQuestions;
+                scoreElement.textContent = score;
 
-                    optionDiv.appendChild(radioInput);
-                    optionDiv.appendChild(label);
-                     // Allow clicking the whole div to select the radio
-                    optionDiv.addEventListener('click', () => {
-                        if (!radioInput.disabled) {
-                             radioInput.checked = true;
-                             // Manually trigger change event for styling and button enable
-                             radioInput.dispatchEvent(new Event('change'));
-                        }
-                    });
-
-                    optionsContainer.appendChild(optionDiv);
-                });
-
-                totalQuestionsElement.textContent = quizData.length;
-                 scoreElement.textContent = score; // Update score display on load
+                 // Change Next button text if this is the last question overall
+                 if (currentQuestionIndex === quizData.length - 1) {
+                    nextButton.textContent = 'Show Results';
+                 }
 
 
             } else {
-                // End of quiz
+                // This case should ideally not be reached if the last question logic works,
+                // but as a fallback, go to results.
                 showResults();
             }
         }
 
-        function submitAnswer() {
+        function submitAnswer() { // Only called for MC questions
             const selectedRadio = optionsContainer.querySelector('input[name="option"]:checked');
+            if (!selectedRadio) return; // Should be handled by button disable
 
-            if (!selectedRadio) {
-                // Should not happen if button is disabled correctly, but as a fallback
-                feedbackArea.textContent = "Please select an answer!";
-                feedbackArea.style.display = 'block';
-                return;
-            }
+            submitButton.disabled = true;
+            submitButton.style.display = 'none';
+            nextButton.style.display = 'block'; // Show next/results button
+            // Keep the text set in loadQuestion ('Next Question' or 'Show Results')
 
-            submitButton.disabled = true; // Disable after submitting
-             submitButton.style.display = 'none'; // Hide submit button
-             nextButton.style.display = 'block'; // Show next button
 
             const selectedAnswerIndex = parseInt(selectedRadio.value);
             const correctAnswerIndex = quizData[currentQuestionIndex].correctIndex;
 
-             // Disable all options after submission
             const allOptionDivs = optionsContainer.querySelectorAll('.option');
             allOptionDivs.forEach((div, index) => {
                 const radio = div.querySelector('input[type="radio"]');
                 radio.disabled = true;
-                div.classList.remove('selected'); // Remove selection highlight
-                div.classList.add('disabled'); // Mark as disabled visually
+                div.classList.remove('selected');
+                div.classList.add('disabled');
 
-                // Highlight correct and incorrect answers
                 if (index === correctAnswerIndex) {
                     div.classList.add('correct');
-                     div.classList.remove('disabled'); // Correct answer is not just 'disabled'
+                    div.classList.remove('disabled');
                 } else if (index === selectedAnswerIndex) {
                     div.classList.add('incorrect');
-                     div.classList.remove('disabled'); // Incorrect selected answer is not just 'disabled'
+                    div.classList.remove('disabled');
                 }
              });
-
 
             if (selectedAnswerIndex === correctAnswerIndex) {
                 score++;
                 feedbackArea.textContent = 'Correct!';
-                feedbackArea.className = 'feedback-area correct-feedback'; // Add class for styling
+                feedbackArea.className = 'feedback-area correct-feedback';
             } else {
+                // Use textContent for security/consistency
                 feedbackArea.textContent = `Incorrect. The correct answer was: ${quizData[currentQuestionIndex].options[correctAnswerIndex]}`;
-                feedbackArea.className = 'feedback-area incorrect-feedback'; // Add class for styling
+                feedbackArea.className = 'feedback-area incorrect-feedback';
             }
 
             feedbackArea.style.display = 'block';
-            scoreElement.textContent = score; // Update score display
+            scoreElement.textContent = score; // Update score display after checking
 
-            // Change Next button text on the last question
-            if (currentQuestionIndex === quizData.length - 1) {
-                nextButton.textContent = 'Show Results';
-            }
+
         }
 
         function nextQuestion() {
-            currentQuestionIndex++;
-            loadQuestion();
+            // Check if we should show results *before* incrementing
+             if (currentQuestionIndex >= quizData.length - 1) {
+                 showResults();
+             } else {
+                 currentQuestionIndex++;
+                 loadQuestion(); // Load next question
+             }
         }
 
-        function showResults() {
-            questionArea.style.display = 'none'; // Hide question section
-            scoreArea.style.display = 'none'; // Hide score during results
-            resultsArea.style.display = 'block'; // Show results section
-             restartButton.style.display = 'block'; // Show restart button
+         function showResults() {
+            questionArea.style.display = 'none';
+            scoreArea.style.display = 'none';
+            resultsArea.style.display = 'block';
+            restartButton.style.display = 'block';
 
-            const percentage = ((score / quizData.length) * 100).toFixed(1);
-            finalScoreElement.textContent = `You scored ${score} out of ${quizData.length} (${percentage}%)`;
+             // Calculate percentage based only on MC questions
+             const percentage = totalMcQuestions > 0 ? ((score / totalMcQuestions) * 100).toFixed(1) : 0;
+             finalScoreElement.textContent = `Multiple Choice Score: ${score} out of ${totalMcQuestions} (${percentage}%)`;
+             resultsInfoElement.style.display = 'block'; // Ensure info text is shown
         }
 
-         function restartQuiz() {
+        function restartQuiz() {
             currentQuestionIndex = 0;
             score = 0;
             resultsArea.style.display = 'none';
             restartButton.style.display = 'none';
             questionArea.style.display = 'block';
             scoreArea.style.display = 'block';
-             nextButton.textContent = 'Next Question'; // Reset button text
-            loadQuestion(); // Load the first question again
+            // nextButton.textContent will be set correctly by loadQuestion
+            loadQuestion();
         }
 
 
         // Event Listeners
-        submitButton.addEventListener('click', submitAnswer);
-        nextButton.addEventListener('click', nextQuestion);
+        submitButton.addEventListener('click', submitAnswer); // Only enabled/shown for MC
+        nextButton.addEventListener('click', nextQuestion); // Shown after MC submit OR directly for critical OR to show results
         restartButton.addEventListener('click', restartQuiz);
-
 
         // Initial Load
         loadQuestion();
 
     </script>
 
-</body>
+    </body>
 </html>
