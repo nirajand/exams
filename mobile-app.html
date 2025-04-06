@@ -230,6 +230,17 @@
         </div>
 
         <script>
+
+            /* Function to shuffle an array in place using Fisher-Yates algorithm */
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        // Pick a random index from 0 to i
+        const j = Math.floor(Math.random() * (i + 1));
+        // Swap element i with element at random index j
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    // No need to return the array, it's shuffled in place
+}
         const quizData = [
              // --- Start Combination ---
              // Chapter 1 - MCQs (2)
@@ -471,7 +482,7 @@
             {
                 type: 'critical',
                 question: "An app update gets rejected for requesting excessive permissions. Explain the importance of app store guidelines regarding user privacy/permissions. What are potential negative consequences for the developer (beyond rejection) if they repeatedly try to circumvent these guidelines?",
-                explanation: `#### Answer Guidance:\n*   **Importance of Guidelines:** App store guidelines regarding permissions are crucial for:\n    *   **User Privacy & Trust:** Protecting users from apps that collect unnecessary data or perform actions without justification. This builds trust in the platform ecosystem.\n    *   **Security:** Limiting an app's capabilities reduces the potential damage if the app itself is malicious or compromised.\n    *   **Transparency:** Forcing developers to justify permission requests helps users understand why access is needed.\n*   **Potential Negative Consequences for Developer:**\n    *   **Repeated Rejections/Delays:** Wastes significant time and resources, delaying bug fixes and feature releases.\n    *   **Negative User Perception:** If users notice excessive permission requests (even if approved), it can lead to negative reviews, uninstalls, and damage to the app's reputation.\n    *   **Reduced Discoverability:** Stores might penalize apps with poor user reviews or trust signals.\n    *   **App Suspension:** Persistent or egregious violations can lead to the app being permanently removed from the store.\n    *   **Developer Account Termination:** In severe cases, the developer's entire account could be terminated, preventing them from publishing any apps on that platform.`
+                explanation: `Answer Guidance:\n   Importance of Guidelines: App store guidelines regarding permissions are crucial for:\n    User Privacy & Trust: Protecting users from apps that collect unnecessary data or perform actions without justification. This builds trust in the platform ecosystem.\n    Security: Limiting an app's capabilities reduces the potential damage if the app itself is malicious or compromised.\n    Transparency: Forcing developers to justify permission requests helps users understand why access is needed.\n*   **Potential Negative Consequences for Developer:**\n    *   **Repeated Rejections/Delays:** Wastes significant time and resources, delaying bug fixes and feature releases.\n    *   **Negative User Perception:** If users notice excessive permission requests (even if approved), it can lead to negative reviews, uninstalls, and damage to the app's reputation.\n    *   **Reduced Discoverability:** Stores might penalize apps with poor user reviews or trust signals.\n    *   **App Suspension:** Persistent or egregious violations can lead to the app being permanently removed from the store.\n    *   **Developer Account Termination:** In severe cases, the developer's entire account could be terminated, preventing them from publishing any apps on that platform.`
             }, // Comma after object
             // Chapter 7 - MCQs (4)
              {
@@ -526,10 +537,9 @@
              {
                 type: 'critical',
                 question: "Swift was designed with 'safety' as a key goal. Describe two specific Swift language features that contribute to safer code compared to Objective-C, and explain *how* these features help prevent common runtime crashes or bugs.",
-                explanation: `#### Answer Guidance:\nChoose two examples like these:\n1.  **Optionals (\`?\`, \`!\`):**\n    *   **Feature:** Swift explicitly requires developers to handle cases where a variable might not have a value (\`nil\`). Variables must be declared as Optional (e.g., \`String?\`) if they can be \`nil\`.\n    *   **How it Helps:** This prevents unexpected crashes caused by attempting to access methods or properties on a \`nil\` reference (equivalent to null pointer exceptions). Developers are forced to safely unwrap optionals (using \`if let\`, \`guard let\`, optional chaining \`?.\`, or the nil-coalescing operator \`??\`) before using their value, making \`nil\`-related errors compile-time checks rather than runtime crashes.\n\n2.  **Strong Type System & Type Inference:**\n    *   **Feature:** Swift is strongly typed, meaning every variable has a specific type, and the compiler checks for type mismatches. It also has powerful type inference, reducing the need for explicit type declarations while maintaining safety.\n    *   **How it Helps:** Catches many errors at compile time that might only appear at runtime in more dynamically typed languages (like passing a number where a string is expected). This prevents type-related crashes and unexpected behavior, making the code more predictable and robust.\n\n*(Other valid examples include: Immutability by default (\`let\`), Value types (structs/enums) reducing side effects, Clear error handling (\`do-try-catch\`), Guard statements for early exits)*`
-             } // NO comma after the last object in the array
-             // --- End Combination (Total 20 MCQs, 8 Critical) ---
-        ]; // Semicolon terminates the array assignment statement
+                explanation: `Answer Guidance:\nChoose two examples like these:\n1.  Optionals (\`?\`, \`!\`):**\n       Feature: Swift explicitly requires developers to handle cases where a variable might not have a value (\`nil\`). Variables must be declared as Optional (e.g., \`String?\`) if they can be \`nil\`.\n   How it Helps: This prevents unexpected crashes caused by attempting to access methods or properties on a \`nil\` reference (equivalent to null pointer exceptions). Developers are forced to safely unwrap optionals (using \`if let\`, \`guard let\`, optional chaining \`?.\`, or the nil-coalescing operator \`??\`) before using their value, making \`nil\`-related errors compile-time checks rather than runtime crashes.\n\n2.  Strong Type System & Type Inference:\n    Feature: Swift is strongly typed, meaning every variable has a specific type, and the compiler checks for type mismatches. It also has powerful type inference, reducing the need for explicit type declarations while maintaining safety.\n       How it Helps: Catches many errors at compile time that might only appear at runtime in more dynamically typed languages (like passing a number where a string is expected). This prevents type-related crashes and unexpected behavior, making the code more predictable and robust.\n\n*(Other valid examples include: Immutability by default (\`let\`), Value types (structs/enums) reducing side effects, Clear error handling (\`do-try-catch\`), Guard statements for early exits)*`
+             }
+        ];
 
         // DOM Elements
         const questionTextElement = document.getElementById('question-text');
@@ -555,6 +565,8 @@
         let selectedOptionElement = null; // To track the div of the selected option
         const totalMcQuestions = quizData.filter(q => q.type === 'mc').length; // Calculate total MC questions
 
+        shuffleArray(quizData);
+            
         function loadQuestion() {
             // Reset common elements
             feedbackArea.style.display = 'none';
